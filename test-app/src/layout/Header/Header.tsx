@@ -10,9 +10,9 @@ export const Header = () => {
         aria-label="Main navigation"
       >
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <Link to="/" className="navbar-brand">
             Using react-ui-common-controls
-          </a>
+          </Link>
           <button
             className="navbar-toggler p-0 border-0"
             type="button"
@@ -24,11 +24,11 @@ export const Header = () => {
 
           <div className="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link to="/" className="nav-link active">
                   Home
                 </Link>
-              </li>
+              </li> */}
               {/* <li className="nav-item">
                 <a className="nav-link" href="#">
                   Notifications
