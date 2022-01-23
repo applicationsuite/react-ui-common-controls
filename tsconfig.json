@@ -15,9 +15,9 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "outDir": "./dist"
+    "outDir": "./lib"
   },
   "include": ["src"],
   "files": ["src/index.ts"],
-  "exclude": ["node_modules", "dist", "**/__tests__/*", "src/**/*.stories.*", "src/**/*.test.*"]
+  "exclude": ["node_modules", "lib", "**/__tests__/*", "src/**/*.stories.*", "src/**/*.test.*"]
 }
