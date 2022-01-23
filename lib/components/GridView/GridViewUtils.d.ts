@@ -1,0 +1,12 @@
+import { FilterDataType, FilterOperation, IGridColumn, IGroupData, IGroupField, IGroupItem, IGridFilterItem } from './GridView.models';
+export declare const mergeItems: (itemsData: any[], mergeField: string) => any;
+export declare const applyFilterTextByField: (filterText: string | undefined, items: any[] | undefined, fieldName: string) => any[];
+export declare const isValidDate: (date: any) => boolean;
+export declare const compareDates: (date1?: any, date2?: any, filterOperation?: FilterOperation) => boolean;
+export declare const compareDateRange: (date?: any, startDate?: any, endDate?: any) => boolean;
+export declare const applyFiltersByFieldName: (filterValues: any[] | undefined, itemList: any[] | undefined, fieldName: string, dataType?: FilterDataType, filterOperation?: FilterOperation) => any[];
+export declare const getFieldFilterItems: (field: string, selectedValues: any[], itemList?: any[] | undefined, isItemCountRequired?: boolean | undefined) => IGridFilterItem[];
+export declare const getGridViewGroupsByColumns: (gridColumns: IGridColumn[], items: any[], groupColumn?: IGridColumn | undefined, allowGroupSelection?: boolean | undefined) => IGroupData;
+export declare const getGridViewGroupsByFields: (fields: IGroupField[], items: any[]) => IGroupData;
+export declare const getGroupData: (groupFieldName: string, items?: any[]) => IGroupItem[];
+export declare const getFormattedValue: (value: any) => any;
