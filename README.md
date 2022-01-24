@@ -17,16 +17,28 @@ To install the library run the following command -
 
 ## Controls
 
-[AppWrapper](docs/AppWrapper.md)
-[ErrorBoundary](docs/ErrorBoundary.md)
-[FileUpload](docs/FileUpload.md)
-[GridView](docs/GridView.md)
-[HighlightText](docs/HighlightText.md)
-[LanguageProvider](docs/LanguageProvider.md)
-[Logger](docs/Logger.md)
-[Pagination](docs/Pagination.md)
-[ThemeProvider](docs/ThemeProvider.md)
-[Wizard](docs/Wizard.md)
+Controls | Date Modified
+--- | ---
+[AppWrapper](docs/AppWrapper.md) | 
+--- | ---
+[ErrorBoundary](docs/ErrorBoundary.md) |
+--- | ---
+[FileUpload](docs/FileUpload.md) |
+--- | ---
+[GridView](docs/GridView.md) |
+--- | ---
+[HighlightText](docs/HighlightText.md) |
+--- | ---
+[LanguageProvider](docs/LanguageProvider.md) |
+--- | ---
+[Logger](docs/Logger.md) |
+--- | ---
+[Pagination](docs/Pagination.md) |
+--- | ---
+[ThemeProvider](docs/ThemeProvider.md) |
+--- | ---
+[Wizard](docs/Wizard.md) |
+--- | ---
 
 
 ## Release Notes
