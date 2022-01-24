@@ -34,111 +34,21 @@ To install the library run the following command -
 
 #### 1.0.2
 
-- AppWrapper Control added
-- ErrorBoundary Control Added
+- AppWrapper control added
+- ErrorBoundary control Added
+- FileUpload control Added
+- GridView control new features Added
+- HighlightText control Added
+- LanguageProvider control Added
+- Logger control Added
+- Pagination control Added
+- ThemeProvider control Added
+- Wizard control Added
+
 
 #### 1.0.1
 
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
-
-#### 1.0.2
-
-- AppWrapper Control added
-- ErrorBoundary Control Added
-
-#### 1.0.1
-
-- Gridview - Selection bug fix
+- Gridview - Gridview Control added
 
 <!-- [AppWrapper](#AppWrapper)
 [ErrorBoundary](#ErrorBoundary)
