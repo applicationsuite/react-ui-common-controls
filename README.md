@@ -32,6 +32,11 @@ To install the library run the following command -
 
 ## Release Notes
 
+#### 1.0.3
+
+- GridView control bug fix
+
+
 #### 1.0.2
 
 - AppWrapper control added
