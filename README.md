@@ -30,7 +30,7 @@ To install the library run the following command -
 
 ## Release Notes
 
-#### 1.0.3 <span style="color:grey">(2022-01-24)</span>
+#### 1.0.3 (2022-01-24)
 
 - GridView control bug fix 
 
