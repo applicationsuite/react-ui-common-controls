@@ -17,7 +17,17 @@ To install the library run the following command -
 
 ## Controls
 
-[GridView](#GridView)
+[AppWrapper](docs/AppWrapper.md)
+[ErrorBoundary](docs/ErrorBoundary.md)
+[FileUpload](docs/FileUpload.md)
+[GridView](docs/GridView.md)
+[HighlightText](docs/HighlightText.md)
+[LanguageProvider](docs/LanguageProvider.md)
+[Logger](docs/Logger.md)
+[Pagination](docs/Pagination.md)
+[ThemeProvider](docs/ThemeProvider.md)
+[Wizard](docs/Wizard.md)
+
 
 ## Release Notes
 
@@ -129,4 +139,27 @@ To install the library run the following command -
 
 - Gridview - Selection bug fix
 
+
+
+<!-- [AppWrapper](#AppWrapper)
+[ErrorBoundary](#ErrorBoundary)
+[FileUpload](#FileUpload)
+[GridView](#GridView)
+[HighlightText](#HighlightText)
+[LanguageProvider](#LanguageProvider)
+[Logger](#Logger)
+[Pagination](#Pagination)
+[ThemeProvider](#ThemeProvider)
+[Wizard](#Wizard)
+
+## <a name="AppWrapper"></a>AppWrapper
+## <a name="ErrorBoundary"></a>ErrorBoundary
+## <a name="FileUpload"></a>FileUpload
 ## <a name="GridView"></a>GridView
+## <a name="HighlightText"></a>HighlightText
+## <a name="LanguageProvider"></a>LanguageProvider
+## <a name="Logger"></a>Logger
+## <a name="Pagination"></a>Pagination
+## <a name="ThemeProvider"></a>ThemeProvider
+## <a name="Wizard"></a>Wizard
+ -->
