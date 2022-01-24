@@ -30,14 +30,12 @@ To install the library run the following command -
 
 ## Release Notes
 
-#### 1.0.3 
-##### 2022-01-24
+#### 1.0.3 (2022-01-24)
 
 - GridView control bug fix 
 
 
-#### 1.0.2 
-##### 2022-01-23
+#### 1.0.2 (2022-01-23)
 
 - AppWrapper control added
 - ErrorBoundary control Added
@@ -51,8 +49,7 @@ To install the library run the following command -
 - Wizard control Added
 
 
-#### 1.0.1 
-##### 2022-01-22
+#### 1.0.1 (2022-01-22)
 
 - Gridview - Gridview Control added
 
