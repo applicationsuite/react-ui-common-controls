@@ -16,6 +16,7 @@ export declare const CommonConstants: {
     NO: string;
     MANUAL_EXCEPTION: string;
 };
+export declare const TWELVE_COLUMN_CLASS = "ms-Grid-col ms-sm12 ms-md12 ms-lg12 ms-xl12";
 export declare const DEFAULT_PAGE_SIZE = 10;
 export declare const SORT_TYPE: {
     ASC: string;

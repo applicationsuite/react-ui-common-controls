@@ -1,0 +1,10 @@
+import { FileReadType, IFileInfo } from './FileUpload.models';
+export declare const getUpdatedFiles: (files?: IFileInfo[], fileTypes?: string[], maxFileSize?: number | undefined, selectedFiles?: IFileInfo[]) => IFileInfo[];
+export declare const readFile: (file: IFileInfo, readType?: FileReadType | undefined) => Promise<unknown>;
+export declare const loadFiles: (files: IFileInfo[], fileParsers: any) => Promise<IFileInfo[]>;
+export declare const readFiles: (files: IFileInfo[]) => Promise<IFileInfo[]>;
+export declare const parseFiles: (files: IFileInfo[], fileParsers: any) => Promise<IFileInfo[]>;
+export declare const parseFile: (file: IFileInfo, fileParsers: any) => Promise<unknown>;
+export declare const validateFile: (file: IFileInfo, fileTypes: string[], maxSizeInMB?: number | undefined, selectedFiles?: IFileInfo[] | undefined) => false | undefined;
+export declare const validateFiles: (files?: IFileInfo[], fileTypes?: string[], maxFileSize?: undefined, selectedFiles?: IFileInfo[]) => void;
+export declare const readFileAsArrayBuffer: (fileContent: any) => Promise<unknown>;

@@ -1,12 +1,13 @@
 import React from 'react';
 import './Home.css';
+import { GridViewExample } from '../GridView/GridView.example';
 
 export const Home = () => {
   const [component, setComponent] = React.useState('');
   const controls: any[] = [
     {
       name: 'GridView',
-      component: () => <>GridView Control</>
+      component: () => <GridViewExample />
     },
     {
       name: 'FileUpload',

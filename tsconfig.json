@@ -19,6 +19,6 @@
     "outDir": "./lib"
   },
   "include": ["src"],
-  "files": ["src/index.ts"],
-  "exclude": ["node_modules", "lib", "**/__tests__/*", "src/**/*.stories.*", "src/**/*.test.*"]
+  "files": ["src/index.js"],
+  "exclude": ["node_modules", "./index.js", "./index.d.ts","lib", "**/__tests__/*", "src/**/*.stories.*", "src/**/*.test.*"]
 }

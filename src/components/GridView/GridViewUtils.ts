@@ -1,6 +1,5 @@
-import { IGroup } from './GridView.models';
-import { SORT_TYPE } from '../../constants';
-import { applySorting } from '../../utilities';
+import { IGroup } from '@fluentui/react';
+import { SORT_TYPE, applySorting } from '../../';
 import {
   FilterDataType,
   FilterOperation,
@@ -347,13 +346,13 @@ const getGroupByField = (groupItem: IGroupItem, column: IGridColumn, count: numb
     startIndex: count,
     count: groupItem.items.length,
     data: groupItem.items,
-    level: column.groupLevel!
+    level: column.groupLevel
   };
   return group;
 };
 
 export const getGroupData = (groupFieldName: string, items: any[] = []) => {
-  const groupValues = [...new Set(items.map((item) => item[groupFieldName]))];
+  const groupValues = Array.from(new Set(items.map((item) => item[groupFieldName])));
   const groups: IGroupItem[] = [];
   groupValues.forEach((grp) => {
     const grpItems = items.filter((item) => item[groupFieldName] === grp);

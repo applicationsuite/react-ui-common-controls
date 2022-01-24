@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { initializeIcons } from '@fluentui/react/lib/Icons';
+initializeIcons(/* optional base url */);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

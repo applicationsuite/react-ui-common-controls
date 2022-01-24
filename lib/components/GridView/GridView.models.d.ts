@@ -1,12 +1,9 @@
-/// <reference types="react" />
+import React from 'react';
+import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react';
 import { IGridViewActions } from './GridView.actions';
 export declare enum GridViewType {
     InMemory = 0,
     ServerSide = 1
-}
-export interface IGridViewContextData {
-    state: IGridViewData;
-    actions: IGridViewActions;
 }
 export declare enum FilterType {
     SelectionFilter = 0,
@@ -58,38 +55,9 @@ export declare enum QucickActionSectionAlignment {
     Left = 0,
     Right = 1
 }
-export declare enum ColumnActionsMode {
-    /** Renders the column header as disabled. */
-    disabled = 0,
-    /** Renders the column header as clickable. Default value. */
-    clickable = 1,
-    /** Renders the column header as clickable and displays the dropdown chevron. */
-    hasDropdown = 2
-}
-export interface IDefaultSelections {
-    pagingOptions?: IPagingOptions;
-    sortingOptions?: ISortingOptions[];
-    selectedFilters?: IGridFilter[];
-    searchText?: string;
-    selectedItems?: any[];
-    groupBy?: string;
-}
-export declare enum GridViewChangeType {
-    SelectedFilters = 0,
-    SearchText = 1,
-    Pagination = 2,
-    Sorting = 3,
-    SelectedItems = 4,
-    GroupBy = 5
-}
-export declare enum GridViewGroupLabelType {
-    GroupValue = 0,
-    GroupValueAndCount = 1,
-    ColumnNameAndGroupValueAndCount = 2
-}
-export declare enum ActionBarSectionType {
-    Left = 0,
-    Right = 1
+export declare enum PageType {
+    Previous = 0,
+    Next = 1
 }
 export declare const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 export declare const FILTER_ITEM_TEXT_FIELD = "label";
@@ -127,13 +95,38 @@ export declare const GRIDVIEW_LOCALIZATION_CONSTANTS: {
         defaultMessage: string;
     };
 };
+export interface IDefaultSelections {
+    pagingOptions?: IPagingOptions;
+    sortingOptions?: ISortingOptions[];
+    selectedFilters?: IGridFilter[];
+    searchText?: string;
+    selectedItems?: any[];
+    groupBy?: string;
+}
+export declare enum GridViewChangeType {
+    SelectedFilters = 0,
+    SearchText = 1,
+    Pagination = 2,
+    Sorting = 3,
+    SelectedItems = 4,
+    GroupBy = 5
+}
+export declare enum GridViewGroupLabelType {
+    GroupValue = 0,
+    GroupValueAndCount = 1,
+    ColumnNameAndGroupValueAndCount = 2
+}
+export declare enum ActionBarSectionType {
+    Left = 0,
+    Right = 1
+}
 export interface IGridViewData {
     gridViewType: GridViewType;
     items: any[];
     totalRecords?: number;
     itemUniqueField?: string;
     columns?: IGridColumn[];
-    groups?: any[];
+    groups?: IGroup[];
     groupColumn?: IGridColumn;
     filteredItems?: any[];
     paginatedFilteredItems?: any[];
@@ -150,6 +143,10 @@ export interface IGridViewData {
     filtersToApply?: IGridFilter[];
     filterToApply?: IGridFilter;
 }
+export interface IGridViewContextData {
+    state: IGridViewData;
+    actions: IGridViewActions;
+}
 export interface IPagingOptionsWithoutPage {
     isNextAllowed: boolean;
     isPreviousAllowed: boolean;
@@ -157,6 +154,7 @@ export interface IPagingOptionsWithoutPage {
 export interface IPagingOptions {
     pageSize: number;
     pageNumber: number;
+    pageType?: PageType;
 }
 export interface ISortingOptions {
     sortType: string;
@@ -204,7 +202,7 @@ export interface ISearchField {
     label: string;
     applySearchText?: (filterText: string, items: any[]) => any[];
 }
-export interface IGridViewParams {
+export interface IGridViewParams extends IDetailsListProps {
     gridViewType: GridViewType;
     items: any[];
     totalRecords?: number;
@@ -233,10 +231,12 @@ export interface IGridViewParams {
     selectedItems?: any[];
     searchText?: string;
     groupBy?: string;
+    groups?: IGroup[];
     itemUniqueField?: string;
     searchPlaceHolderText?: string;
     searchFields?: ISearchField[];
     filters?: IGridFilter[];
+    statusMessages?: IGridViewMessage[];
     maxSelection?: Number;
     maxFilterTagLength?: number;
     exportOptions?: IExportOptions[];
@@ -268,43 +268,9 @@ export interface IGridViewParams {
     actionSectionClass?: string;
     gridMainClass?: string;
     gridDataClass?: string;
+    detailsListClass?: string;
 }
-export interface IGridColumn {
-    /** A unique key for identifying the column. */
-    key: string;
-    /** Name to render on the column header. */
-    name: string;
-    /**
-     * The field to pull the text value from for the column.
-     * Can be unset if a custom `onRender` method is provided.
-     */
-    fieldName?: string;
-    /** Class name to apply to the column cell within each row. */
-    className?: string;
-    /** Custom overrides to the themed or default styles. */
-    /** Minimum width for the column. */
-    minWidth: number;
-    /** Maximum width for the column, if stretching is allowed in justified scenarios. */
-    maxWidth?: number;
-    /**
-     * Accessible label for the column. The column name will still be used as the primary label,
-     * but this text (if specified) will be read after the column name.
-     */
-    ariaLabel?: string;
-    /** Custom renderer for cell content, instead of the default text rendering. */
-    onRender?: (item?: any, index?: number, column?: IGridColumn) => any;
-    /** Callback for when the user clicks on the column header. */
-    onColumnClick?: (ev: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
-    /**
-     * Accessible label for indicating that the list is sorted by this column in ascending order.
-     * This will be read after the main column header label.
-     */
-    sortAscendingAriaLabel?: string;
-    /**
-     * Accessible label for indicating that the list is sorted by this column in descending order.
-     * This will be read after the main column header label.
-     */
-    sortDescendingAriaLabel?: string;
+export interface IGridColumn extends IColumn {
     selected?: boolean;
     required?: boolean;
     searchable?: boolean;
@@ -321,6 +287,35 @@ export interface IGridColumn {
     FilterComponent?: any;
     applyFilter?: (filter: IGridFilter, items: any[]) => any[];
     applySearchText?: (searchText: string, items: any[]) => any[];
+}
+export interface IQuickActionSectionParams {
+    gridViewType: GridViewType;
+    columns?: IGridColumn[];
+    sortingOptions?: ISortingOptions[];
+    sortLevel?: number;
+    groupColumn?: IGridColumn;
+    showQuickSearch: boolean;
+    searchText?: string;
+    searchPlaceHolderText?: string;
+    showFilters: boolean;
+    exportOptions?: IExportOptions[];
+    selectedItems?: any[];
+    actionBarItems?: IActionBarItems;
+    quickActionSectionItems?: IQucickActionSectionItem[];
+    allowGroupSelection?: boolean;
+    quickSearchOnEnter?: boolean;
+    hideQuickSearchButton?: boolean;
+    hideColumnPicker?: boolean;
+    allowMultiLevelSorting?: boolean;
+    onSearchTextChange?: (value: string) => void;
+    onColumnChange?: (columns: IGridColumn[]) => void;
+    onGroupColumnChange?: (column?: IGridColumn) => void;
+    toggleFilters?: (showFilters: any) => void;
+    onRefresh?: () => void;
+    onExport?: (fileType: string) => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
+    onSort?: (sortingOptions: ISortingOptions[]) => void;
 }
 export interface IQucickActionSectionItem {
     key: string;
@@ -386,18 +381,8 @@ export interface ITimeLineRange {
     startDate: Date;
     endDate: Date;
 }
-export interface IGroup {
-    key: string;
-    name?: string;
-    level?: number;
-    children?: any;
-    groupName?: string;
-    startIndex: number;
-    count: number;
-    data?: any;
-}
 export interface IGroupData {
-    groups?: any[];
+    groups?: IGroup[];
     items: any[];
 }
 export interface IGroupItem {
