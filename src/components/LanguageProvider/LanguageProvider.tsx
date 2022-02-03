@@ -1,27 +1,22 @@
 import React, { useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import { LocalizationData } from './LanguageProvider.models';
+import { LocalizationData, ILocalizationProviderProps, ILanguageContextData } from './LanguageProvider.models';
 import { getLocalizationDetails, mergeLocalizationData } from './locallizationUtil';
 import { LanguageContext } from './LanguageProvider.contexts';
-import { ILanguageContextData } from '..';
 import { AppDataContext } from '../';
 
-export const LanguageProvider: React.FC<{
-  children: any;
-  language?: string;
-  localizationData?: any[];
-}> = ({ children, language, localizationData }) => {
+export const LanguageProvider: React.FC<ILocalizationProviderProps> = (props) => {
   const browserLanguage =
-    language || navigator.language || (navigator.languages && navigator.languages[0]);
+    props.language || navigator.language || (navigator.languages && navigator.languages[0]);
   const [localization, setLocalization] = useState<LocalizationData>();
-  const localizationStrings = mergeLocalizationData(localizationData || []);
+  const localizationStrings = mergeLocalizationData(props.localizationData || []);
 
   const appContext = React.useContext(AppDataContext);
 
   React.useEffect(() => {
     const localizationInfo = getLocalizationDetails(browserLanguage, localizationStrings);
     setLocalization(localizationInfo);
-  }, [browserLanguage, language]);
+  }, [browserLanguage, props.language]);
 
   const setLanguage = (languageKey: string) => {
     const localizationInfo = getLocalizationDetails(languageKey, localizationStrings);
@@ -43,7 +38,7 @@ export const LanguageProvider: React.FC<{
   return (
     <LanguageContext.Provider value={contextData}>
       <IntlProvider locale={localization!.locale} messages={localization!.messages}>
-        {children}
+        {props.children}
       </IntlProvider>
     </LanguageContext.Provider>
   );

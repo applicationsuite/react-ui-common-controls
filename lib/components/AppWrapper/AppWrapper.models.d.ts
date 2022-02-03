@@ -1,5 +1,9 @@
 import { ILoggerProps } from '../Logger';
 import { IAppWrapperActions } from './AppWrapper.actions';
+export declare enum ThemeType {
+    Light = "light",
+    Dark = "dark"
+}
 export interface IAppWrapperProps {
     userInfo?: IUserInfo;
     language?: string;
