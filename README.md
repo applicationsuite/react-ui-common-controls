@@ -31,6 +31,14 @@ To install the library run the following command -
 
 ## Release Notes
 
+#### 1.0.6 (2022-01-24)
+
+- MicroFrontEnd bug fix
+
+#### 1.0.5 (2022-01-24)
+
+- UseFile, UseEffectAsync and useDimension hooks are added
+
 #### 1.0.4 (2022-01-24)
 
 - MicroFrontEnd control is added

@@ -11,8 +11,7 @@ export const loadMicroFrontEndJss = (microFrontEndInfo: IMicroFrontEndInfo, mani
   script.id = microFrontEndInfo.jsScriptName;
   document.head.appendChild(script);
   script.onload = () => {
-    loadMicroFrontEnd(microFrontEndInfo);
-    microFrontEndInfo.onLoadComplete && microFrontEndInfo.onLoadComplete('');
+    loadMicroFrontEnd(microFrontEndInfo);    
   };
   script.onerror = () => {
     microFrontEndInfo.onLoadComplete &&
@@ -90,6 +89,7 @@ export const loadMicroFrontEnd = (state: IMicroFrontEndInfo) => {
         notify: state.onNotify
       };
       window[state.mountEventName](state.containerName, contextData);
+      state.onLoadComplete && state.onLoadComplete('');
     } else {
       state.onLoadComplete &&
         state.onLoadComplete(
