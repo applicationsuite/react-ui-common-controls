@@ -17,23 +17,27 @@ To install the library run the following command -
 
 | Controls                                     | Date Modified |
 | -------------------------------------------- | ------------- |
-| [AppWrapper](docs/AppWrapper.md)             |
-| [ErrorBoundary](docs/ErrorBoundary.md)       |
-| [FileUpload](docs/FileUpload.md)             |
-| [GridView](docs/GridView.md)                 |
-| [HighlightText](docs/HighlightText.md)       |
-| [LanguageProvider](docs/LanguageProvider.md) |
-| [Logger](docs/Logger.md)                     |
-| [Pagination](docs/Pagination.md)             |
-| [ThemeProvider](docs/ThemeProvider.md)       |
-| [Wizard](docs/Wizard.md)                     |
+| [AppWrapper](docs/AppWrapper.md)             | 2022-01-23    |
+| [ErrorBoundary](docs/ErrorBoundary.md)       | 2022-01-23    |
+| [FileUpload](docs/FileUpload.md)             | 2022-01-23    |
+| [GridView](docs/GridView.md)                 | 2022-01-24    |
+| [HighlightText](docs/HighlightText.md)       | 2022-01-23    |
+| [LanguageProvider](docs/LanguageProvider.md) | 2022-01-23    |
+| [Logger](docs/Logger.md)                     | 2022-01-23    |
+| [MicroFrontEnd](docs/MicroFrontEnd.md)       | 2022-02-05    |
+| [Pagination](docs/Pagination.md)             | 2022-01-23    |
+| [ThemeProvider](docs/ThemeProvider.md)       | 2022-01-23    |
+| [Wizard](docs/Wizard.md)                     | 2022-01-23    |
 
 ## Release Notes
 
+#### 1.0.4 (2022-01-24)
+
+- MicroFrontEnd control is added
+
 #### 1.0.3 (2022-01-24)
 
-- GridView control bug fix 
-
+- GridView control bug fix
 
 #### 1.0.2 (2022-01-23)
 
@@ -47,7 +51,6 @@ To install the library run the following command -
 - Pagination control Added
 - ThemeProvider control Added
 - Wizard control Added
-
 
 #### 1.0.1 (2022-01-22)
 
