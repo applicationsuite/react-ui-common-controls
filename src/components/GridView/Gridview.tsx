@@ -25,11 +25,11 @@ import {
   IGridViewMessageData,
   GridViewMessageType,
   IExportOptions,
-  PageType,
   DEFAULT_MESSAGE_DISMISS_TIME
 } from './GridView.models';
+import {   PageType} from '../Pagination';
 import { GridViewDefault } from './GridViewDefault';
-import { useInit, useSelection, getUpdateFilters } from './GridView.hooks';
+import { useInit, getFilteredSelectedItems, getUpdateFilters } from './GridView.hooks';
 import { IGridViewActions } from './GridView.actions';
 import { QuickActionSection as QuickActionSectionDefault } from './QuickActionSection';
 import { FilterTags } from './FilterTag';
@@ -58,9 +58,10 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   } = props;
 
   const callBacks: IGridViewCallbacks = {
-    onColumnClick
+    onColumnClick,
+    onSelectionChange
   };
-  const { state, actions } = useInit(props, callBacks);
+  const { state, actions, selection } = useInit(props, callBacks);
   const [showFilters, toggleFilters] = useState(false);
   const [filtersToApply, setFiltersToApply] = useState<IGridFilter[]>();
   const [filtersData, setFiltersData] = useState<IGridFilter[]>([]);
@@ -81,7 +82,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   // #region "Event Handler Section"
 
-  const onSelectionChange = () => {
+  function onSelectionChange() {
     const currentActions = actionsRef.current as IGridViewActions;
     currentActions.applySelectedItems(selection.getSelection());
     if (!isInitialLoad) {
@@ -92,20 +93,18 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         );
     }
     isInitialLoad = false;
-  };
-
-  const selection = useSelection(
-    onSelectionChange,
-    props.allowSelection ? props.items : [],
-    props.itemUniqueField!
-  );
+  }
 
   React.useEffect(() => {
-    if (!compareSelections(props.selectedItems!, state.selectedItems!)) {
-      state.selectedItems = props.selectedItems;
+    let filteredSelectedItems = getFilteredSelectedItems(
+      props.items,
+      props.selectedItems!,
+      props.itemUniqueField!
+    );
+    if (!compareSelections(filteredSelectedItems, state.selectedItems!)) {
       props.allowSelection &&
         props.selectedItems &&
-        updateSelections(props.selectedItems, props.itemUniqueField!);
+        updateSelections(filteredSelectedItems!, props.itemUniqueField!);
     }
   }, [props.selectedItems]);
 
@@ -116,15 +115,19 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   };
 
   const updateSelections = (selectedItems: any[], itemUniqueField: string) => {
-    resetSelection();
-    selectedItems.forEach((item) => {
-      let index = props.items.findIndex((i) => i[itemUniqueField] === item[itemUniqueField]);
-      if (index >= 0) {
-        isInitialLoad = true;
-        selection && selection.setIndexSelected(index, true, false);
-        // selection && selection.setKeySelected(item[itemUniqueField], true, false);
-      }
-    });
+    if (selection.getSelection().length > 0) {
+      isInitialLoad = true;
+      selection.setAllSelected(false);
+    }
+    selectedItems &&
+      selectedItems.length &&
+      selectedItems.forEach((item) => {
+        let index = props.items.findIndex((i) => i[itemUniqueField] === item[itemUniqueField]);
+        if (index >= 0) {
+          isInitialLoad = true;
+          selection && selection.setIndexSelected(index, true, false);
+        }
+      });
   };
 
   const getItems = () => {
@@ -135,7 +138,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         ? state.paginatedFilteredItems
         : state.items;
     return items;
-  };
+  }; 
 
   const getSelections = (changeType?: GridViewChangeType, value?: any) => {
     const defaultSelections: IDefaultSelections = {

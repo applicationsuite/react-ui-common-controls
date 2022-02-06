@@ -1,6 +1,7 @@
 import React from 'react';
 import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react';
 import { IGridViewActions } from './GridView.actions';
+import { PageType } from '../Pagination';
 
 export enum GridViewType {
   InMemory = 0,
@@ -64,11 +65,6 @@ export enum QucickActionSectionAlignment {
   Right = 1
 }
 
-export enum PageType {
-  Previous = 0,
-  Next = 1
-}
-
 export const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 
 export const FILTER_ITEM_TEXT_FIELD = 'label';
@@ -115,6 +111,11 @@ export const GRIDVIEW_LOCALIZATION_CONSTANTS = {
     defaultMessage: 'Clear Filters'
   }
 };
+
+export interface IGridViewContextData {
+  state: IGridViewData;
+  actions: IGridViewActions;
+}
 
 export interface IDefaultSelections {
   pagingOptions?: IPagingOptions;
@@ -167,11 +168,6 @@ export interface IGridViewData {
   allowGroupSelection?: boolean;
   filtersToApply?: IGridFilter[];
   filterToApply?: IGridFilter;
-}
-
-export interface IGridViewContextData {
-  state: IGridViewData;
-  actions: IGridViewActions;
 }
 
 export interface IPagingOptionsWithoutPage {
@@ -263,6 +259,7 @@ export interface IGridViewParams extends IDetailsListProps {
   hideGridSummary?: boolean; // hide the items count and selection count message.
   highLightSearchText?: boolean; //highlights the quick search text
   hideClearFilters?: boolean; //hides the clear filters button in the filter tags
+  selectFirstItemOnLoad?: boolean; //select first item on load
 
   // Selections
   pagingOptions?: IPagingOptions; // paging options for the gridview
@@ -394,6 +391,7 @@ export interface IExportOptions {
 }
 
 export interface IGridViewCallbacks {
+  onSelectionChange?: () => void;
   onColumnClick?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
   onGroupHeaderRender?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
 }

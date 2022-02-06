@@ -44,7 +44,7 @@ export const GridFilters: React.FC<IGridFilterProps> = (props: IGridFilterProps)
       return null;
     }
     if (gridFilters.length - 1 !== index) {
-      return <hr />;
+      return <hr className={classes.filterDivider} />;
     }
     return null;
   };

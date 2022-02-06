@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
 import { IconButton, Dropdown, DefaultButton } from '@fluentui/react';
-import { PageType } from '../../';
+import { PageType, IPaginationProps, IPaginationWithoutPages } from './Pagination.models';
 import { paginationStyles } from './Pagination.styles';
 
 const useStyles = createUseStyles(paginationStyles);
@@ -11,21 +11,6 @@ const defaultProps = {
   pageSize: 10,
   options: [10, 20, 30, 50, 100]
 };
-
-export interface IPaginationProps {
-  pageSize?: number;
-  totalCount: number;
-  options?: number[];
-  pageNumber?: number;
-  showSummary?: boolean;
-  onPaginationChange: (pageNumber?: number, pageSize?: number) => void;
-}
-
-export interface IPaginationWithoutPages {
-  isNextAllowed: boolean;
-  isPreviousAllowed: boolean;
-  onPageChange: (pageType: PageType) => void;
-}
 
 export const getPaginationSummary = (pageNumber: number, pageSize: number, totalCount: number) => {
   const startIndex = (pageNumber! - 1) * pageSize! + 1;
