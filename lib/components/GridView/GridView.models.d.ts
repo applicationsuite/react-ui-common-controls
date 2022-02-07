@@ -56,6 +56,23 @@ export declare enum QucickActionSectionAlignment {
     Left = 0,
     Right = 1
 }
+export declare enum GridViewChangeType {
+    SelectedFilters = 0,
+    SearchText = 1,
+    Pagination = 2,
+    Sorting = 3,
+    SelectedItems = 4,
+    GroupBy = 5
+}
+export declare enum GridViewGroupLabelType {
+    GroupValue = 0,
+    GroupValueAndCount = 1,
+    ColumnNameAndGroupValueAndCount = 2
+}
+export declare enum ActionBarSectionType {
+    Left = 0,
+    Right = 1
+}
 export declare const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 export declare const FILTER_ITEM_TEXT_FIELD = "label";
 export declare const FILTER_ITEM_VALUE_FIELD = "value";
@@ -103,23 +120,6 @@ export interface IDefaultSelections {
     searchText?: string;
     selectedItems?: any[];
     groupBy?: string;
-}
-export declare enum GridViewChangeType {
-    SelectedFilters = 0,
-    SearchText = 1,
-    Pagination = 2,
-    Sorting = 3,
-    SelectedItems = 4,
-    GroupBy = 5
-}
-export declare enum GridViewGroupLabelType {
-    GroupValue = 0,
-    GroupValueAndCount = 1,
-    ColumnNameAndGroupValueAndCount = 2
-}
-export declare enum ActionBarSectionType {
-    Left = 0,
-    Right = 1
 }
 export interface IGridViewData {
     gridViewType: GridViewType;
@@ -243,15 +243,7 @@ export interface IGridViewParams extends IDetailsListProps {
     maxSelection?: Number;
     maxFilterTagLength?: number;
     exportOptions?: IExportOptions[];
-    /**
-     * @deprecated actionBarItems will be removed in future versions. Please use quickActionBarItems instead.
-     */
-    actionBarItems?: IActionBarItems;
     quickActionSectionItems?: IQucickActionSectionItem[];
-    /**
-     * @deprecated QuickActionSection will be removed in future versions. Please use quickActionSectionItems custom onReder instead.
-     */
-    QuickActionSection?: any;
     QuickActionSectionComponent?: any;
     FilterTagsComponent?: any;
     GridSummaryComponent?: any;

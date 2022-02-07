@@ -39,7 +39,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   // #region "State initialization"
   const classes = useStyles();
   const {
-    QuickActionSection,
     QuickActionSectionComponent,
     GridSummaryComponent,
     FilterTagsComponent,
@@ -457,7 +456,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       onDelete: props.onDelete ? onDelete : undefined,
       selectedItems: state.selectedItems,
       // leftItemsOrder: props.actionBarItemsOrder,
-      actionBarItems: props.actionBarItems,
       quickActionSectionItems: props.quickActionSectionItems,
       allowGroupSelection: props.allowGrouping && props.allowGroupSelection,
       groupColumn: state.groupColumn,

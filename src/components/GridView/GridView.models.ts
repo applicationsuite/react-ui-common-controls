@@ -65,6 +65,26 @@ export enum QucickActionSectionAlignment {
   Right = 1
 }
 
+export enum GridViewChangeType {
+  SelectedFilters = 0,
+  SearchText = 1,
+  Pagination = 2,
+  Sorting = 3,
+  SelectedItems = 4,
+  GroupBy = 5
+}
+
+export enum GridViewGroupLabelType {
+  GroupValue = 0,
+  GroupValueAndCount = 1,
+  ColumnNameAndGroupValueAndCount = 2
+}
+
+export enum ActionBarSectionType {
+  Left = 0,
+  Right = 1
+}
+
 export const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 
 export const FILTER_ITEM_TEXT_FIELD = 'label';
@@ -124,26 +144,6 @@ export interface IDefaultSelections {
   searchText?: string;
   selectedItems?: any[];
   groupBy?: string;
-}
-
-export enum GridViewChangeType {
-  SelectedFilters = 0,
-  SearchText = 1,
-  Pagination = 2,
-  Sorting = 3,
-  SelectedItems = 4,
-  GroupBy = 5
-}
-
-export enum GridViewGroupLabelType {
-  GroupValue = 0,
-  GroupValueAndCount = 1,
-  ColumnNameAndGroupValueAndCount = 2
-}
-
-export enum ActionBarSectionType {
-  Left = 0,
-  Right = 1
 }
 
 export interface IGridViewData {
@@ -285,17 +285,8 @@ export interface IGridViewParams extends IDetailsListProps {
   maxSelection?: Number; // if you want a limit on maximum number of item selection
   maxFilterTagLength?: number; // max length of visible filter tag values
   exportOptions?: IExportOptions[]; // export options is for export functionality
-  /**
-   * @deprecated actionBarItems will be removed in future versions. Please use quickActionBarItems instead.
-   */
-  actionBarItems?: IActionBarItems; // this is to customize the action bar items like filters, quick search
   quickActionSectionItems?: IQucickActionSectionItem[]; // this is to customize the action bar items like filters, quick search
 
-  // React Components. Use this if you want to pass a custom component for individual section
-  /**
-   * @deprecated QuickActionSection will be removed in future versions. Please use quickActionSectionItems custom onReder instead.
-   */
-  QuickActionSection?: any;
   QuickActionSectionComponent?: any;
   FilterTagsComponent?: any;
   GridSummaryComponent?: any;
