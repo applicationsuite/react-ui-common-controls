@@ -2,7 +2,6 @@ export const gridFilterPanelStyles = (theme: string) => ({
   applyBtn: {
     marginRight: '16px'
   },
-
   filterFooterBtns: {
     padding: '12px'
   },
