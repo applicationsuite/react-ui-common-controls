@@ -11,7 +11,7 @@ export const FileUploaderExample = () => {
     },
     [FILE_EXTENSIONS.CSV]: (fileContent: any) => {
       return parseExcelFileToJSON(fileContent);
-    },    
+    },
     [FILE_EXTENSIONS.XLS]: (fileContent: any) => {
       return parseExcelFileToJSON(fileContent, [{ Name: 'Name' }, { Age: 'Age' }]);
     }

@@ -1,4 +1,3 @@
-
 export const wizardStyles = (theme: string) => ({
   wizardVertical: {
     height: '100%'

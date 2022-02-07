@@ -1,4 +1,3 @@
-
 export const wizardLinksStyles = (theme: string) => ({
   mainClass: {
     '& button': {

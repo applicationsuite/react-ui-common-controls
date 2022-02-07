@@ -65,4 +65,3 @@ export const sortValues = (val1: any, val2: any, sortType: string) => {
   }
   return 0;
 };
-

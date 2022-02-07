@@ -19,7 +19,6 @@ export const WIZARD_LOCALIZATION_CONSTANTS = {
   STEPS: { id: 'Core.Wizard.Steps', defaultMessage: 'Steps' }
 };
 
-
 export interface IWizardData {
   type: WizardType;
   steps: IWizardStep[];

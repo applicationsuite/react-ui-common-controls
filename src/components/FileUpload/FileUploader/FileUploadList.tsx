@@ -9,15 +9,8 @@ import {
   FileUploadState
 } from '..';
 import { fileUploaderStyles } from './FileUploader.styles';
-import {
-  IColumn,
-  Icon,
-  ProgressIndicator,
-  IconButton,
-  DetailsList,
-  Link
-} from '@fluentui/react';
-import { mergeClassNames} from '../../../'
+import { IColumn, Icon, ProgressIndicator, IconButton, DetailsList, Link } from '@fluentui/react';
+import { mergeClassNames } from '../../../';
 
 const useStyles = createUseStyles(fileUploaderStyles);
 
@@ -41,12 +34,14 @@ export const FileUploadList: React.FC<IFileUploadListProps> = (props) => {
           return props.onDownLoad ? (
             <>
               <Icon iconName="Page" />
-              <Link                
+              <Link
                 onClick={() => {
                   props.onDownLoad && props.onDownLoad(item);
                 }}
                 className={classes.gridfileRowContainer}
-              >{item.name}</Link>
+              >
+                {item.name}
+              </Link>
             </>
           ) : (
             <span>
@@ -111,7 +106,7 @@ export const FileUploadList: React.FC<IFileUploadListProps> = (props) => {
           return (
             <IconButton
               ariaLabel="Delete"
-              iconProps={{iconName: "Delete"}} 
+              iconProps={{ iconName: 'Delete' }}
               onClick={() => props.onRemove && props.onRemove(item)}
             />
           );

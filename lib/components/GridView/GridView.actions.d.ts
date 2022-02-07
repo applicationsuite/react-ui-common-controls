@@ -15,6 +15,7 @@ export declare const GRIDVIEW_ACTIONS: {
     SET_FILTER_TO_APPLY: string;
     SET_SELECTED_FILTERS: string;
     SET_GROUPS: string;
+    SET_DATA: string;
 };
 export interface IGridViewActions {
     initialize: (props: IGridViewParams, callbacks: IGridViewCallbacks) => void;
@@ -25,6 +26,5 @@ export interface IGridViewActions {
     applySelectedItems: (selectedItems: any[]) => void;
     applySelectedColumns: (selectedColumns: IGridColumn[]) => void;
     applyGrouping: (column?: IGridColumn) => void;
-    setFiltersToApply: (filters?: IGridFilter[]) => void;
-    setFilterToApply: (filter?: IGridFilter) => void;
+    setData: (data: any) => void;
 }

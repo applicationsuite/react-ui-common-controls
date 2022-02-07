@@ -17,4 +17,3 @@ export interface ILanguageContextData {
   language: string;
   setLanguage: (language: string) => void;
 }
-

@@ -132,5 +132,5 @@ export interface IFileUploadListProps {
   onRemove?: (item: any) => void;
   onDownLoad?: (item: any) => void;
   fileListContainerClass?: string;
-  fileListGridClass? : string;
+  fileListGridClass?: string;
 }

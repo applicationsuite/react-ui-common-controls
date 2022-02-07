@@ -1,6 +1,6 @@
 export interface IThemeProviderProps {
   theme?: any;
-  loadTheme?: (theme: any) => void
+  loadTheme?: (theme: any) => void;
 }
 
 export interface IThemeProviderData extends IThemeProviderProps {}

@@ -56,7 +56,8 @@
     "spaced-comment": "off",
     "prefer-template": "off",
     "import/export": "off",
-    "no-unneeded-ternary": "off"
+    "no-unneeded-ternary": "off",
+    "no-restricted-globals": "off"
   },
   "ignorePatterns": [
     "**/src/App.tsx",

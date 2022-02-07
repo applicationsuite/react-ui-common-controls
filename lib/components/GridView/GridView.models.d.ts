@@ -1,6 +1,7 @@
 import React from 'react';
 import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react';
 import { IGridViewActions } from './GridView.actions';
+import { PageType } from '../Pagination';
 export declare enum GridViewType {
     InMemory = 0,
     ServerSide = 1
@@ -55,10 +56,6 @@ export declare enum QucickActionSectionAlignment {
     Left = 0,
     Right = 1
 }
-export declare enum PageType {
-    Previous = 0,
-    Next = 1
-}
 export declare const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 export declare const FILTER_ITEM_TEXT_FIELD = "label";
 export declare const FILTER_ITEM_VALUE_FIELD = "value";
@@ -95,6 +92,10 @@ export declare const GRIDVIEW_LOCALIZATION_CONSTANTS: {
         defaultMessage: string;
     };
 };
+export interface IGridViewContextData {
+    state: IGridViewData;
+    actions: IGridViewActions;
+}
 export interface IDefaultSelections {
     pagingOptions?: IPagingOptions;
     sortingOptions?: ISortingOptions[];
@@ -140,12 +141,11 @@ export interface IGridViewData {
     allowSelection?: boolean;
     allowGrouping?: boolean;
     allowGroupSelection?: boolean;
+    availableFilters?: IGridFilter[];
     filtersToApply?: IGridFilter[];
     filterToApply?: IGridFilter;
-}
-export interface IGridViewContextData {
-    state: IGridViewData;
-    actions: IGridViewActions;
+    statusMessages?: IGridViewMessageData[];
+    showFilters?: boolean;
 }
 export interface IPagingOptionsWithoutPage {
     isNextAllowed: boolean;
@@ -224,6 +224,9 @@ export interface IGridViewParams extends IDetailsListProps {
     hideGridSummary?: boolean;
     highLightSearchText?: boolean;
     hideClearFilters?: boolean;
+    selectFirstItemOnLoad?: boolean;
+    showFiltersAside?: boolean;
+    showFiltersOnLoad?: boolean;
     pagingOptions?: IPagingOptions;
     pagingOptionsWithoutPage?: IPagingOptionsWithoutPage;
     sortingOptions?: ISortingOptions[];
@@ -338,6 +341,7 @@ export interface IExportOptions {
     iconName?: string;
 }
 export interface IGridViewCallbacks {
+    onSelectionChange?: () => void;
     onColumnClick?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
     onGroupHeaderRender?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
 }

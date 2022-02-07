@@ -71,7 +71,7 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         totalRecords:
           props.totalRecords || props.totalRecords === 0 ? props.totalRecords : props.items.length,
         columns: updateColumns(
-          state.columns? state.columns: props.columns,
+          state.columns ? state.columns : props.columns,
           sortingOptions!,
           callbacks.onColumnClick,
           props.removeSorting || props.allowMultiLevelSorting
@@ -753,4 +753,3 @@ export const getFilteredSelectedItems = (
     });
   return filteredSelectedItems;
 };
-

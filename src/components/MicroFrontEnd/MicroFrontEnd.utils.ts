@@ -11,7 +11,7 @@ export const loadMicroFrontEndJss = (microFrontEndInfo: IMicroFrontEndInfo, mani
   script.id = microFrontEndInfo.jsScriptName;
   document.head.appendChild(script);
   script.onload = () => {
-    loadMicroFrontEnd(microFrontEndInfo);    
+    loadMicroFrontEnd(microFrontEndInfo);
   };
   script.onerror = () => {
     microFrontEndInfo.onLoadComplete &&

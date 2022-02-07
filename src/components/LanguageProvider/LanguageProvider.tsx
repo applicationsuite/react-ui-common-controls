@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import { LocalizationData, ILocalizationProviderProps, ILanguageContextData } from './LanguageProvider.models';
+import {
+  LocalizationData,
+  ILocalizationProviderProps,
+  ILanguageContextData
+} from './LanguageProvider.models';
 import { getLocalizationDetails, mergeLocalizationData } from './locallizationUtil';
 import { LanguageContext } from './LanguageProvider.contexts';
 import { AppDataContext } from '../';
