@@ -31,15 +31,20 @@ To install the library run the following command -
 
 ## Release Notes
 
-#### 1.0.6 (2022-01-24)
+#### 1.0.7 (2022-02-07)
+
+- GridView - Selected Column Bug Fix
+- GridView - Code refactoring
+
+#### 1.0.6 (2022-02-05)
 
 - MicroFrontEnd bug fix
 
-#### 1.0.5 (2022-01-24)
+#### 1.0.5 (2022-02-05)
 
 - UseFile, UseEffectAsync and useDimension hooks are added
 
-#### 1.0.4 (2022-01-24)
+#### 1.0.4 (2022-02-05)
 
 - MicroFrontEnd control is added
 
