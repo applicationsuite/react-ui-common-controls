@@ -166,8 +166,11 @@ export interface IGridViewData {
   allowSelection?: boolean;
   allowGrouping?: boolean;
   allowGroupSelection?: boolean;
+  availableFilters?: IGridFilter[];
   filtersToApply?: IGridFilter[];
   filterToApply?: IGridFilter;
+  statusMessages?: IGridViewMessageData[];
+  showFilters?: boolean;
 }
 
 export interface IPagingOptionsWithoutPage {
@@ -260,6 +263,8 @@ export interface IGridViewParams extends IDetailsListProps {
   highLightSearchText?: boolean; //highlights the quick search text
   hideClearFilters?: boolean; //hides the clear filters button in the filter tags
   selectFirstItemOnLoad?: boolean; //select first item on load
+  showFiltersAside?: boolean;
+  showFiltersOnLoad?: boolean;
 
   // Selections
   pagingOptions?: IPagingOptions; // paging options for the gridview

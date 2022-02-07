@@ -71,14 +71,18 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         totalRecords:
           props.totalRecords || props.totalRecords === 0 ? props.totalRecords : props.items.length,
         columns: updateColumns(
-          props.columns,
+          state.columns? state.columns: props.columns,
           sortingOptions!,
           callbacks.onColumnClick,
           props.removeSorting || props.allowMultiLevelSorting
         ),
         allowGrouping: props.allowGrouping || (props.groups && props.groups.length > 0),
         allowGroupSelection: props.allowGroupSelection,
-        allowSelection: props.allowSelection
+        allowSelection: props.allowSelection,
+        statusMessages: state.statusMessages ? state.statusMessages : [],
+        filtersToApply: [],
+        availableFilters: [],
+        showFilters: props.showFiltersOnLoad
       };
 
       let filteredItems = [...props.items];
@@ -443,16 +447,10 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         data: selectedColumns
       });
     },
-    setFiltersToApply: (filters?: IGridFilter[]) => {
+    setData: (data: any) => {
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTERS_TO_APPLY,
-        data: filters
-      });
-    },
-    setFilterToApply: (filter?: IGridFilter) => {
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_TO_APPLY,
-        data: filter
+        type: GRIDVIEW_ACTIONS.SET_DATA,
+        data: data
       });
     }
   };

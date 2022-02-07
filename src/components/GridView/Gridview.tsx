@@ -1,13 +1,7 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import { createUseStyles } from 'react-jss';
 import { Stack, StackItem, Icon, ShimmerElementType, mergeStyles, Shimmer } from '@fluentui/react';
-import {
-  HighlightText,
-  SORT_TYPE,
-  Pagination,
-  PaginationWithoutPages
-} from '../../';
+import { HighlightText, SORT_TYPE, Pagination, PaginationWithoutPages } from '../../';
 import { cloneDeep } from 'lodash';
 import {
   IGridFilter,
@@ -23,17 +17,16 @@ import {
   IDefaultSelections,
   IGridViewMessage,
   IGridViewMessageData,
-  GridViewMessageType,
   IExportOptions,
   DEFAULT_MESSAGE_DISMISS_TIME
 } from './GridView.models';
-import {   PageType} from '../Pagination';
+import { PageType } from '../Pagination';
 import { GridViewDefault } from './GridViewDefault';
 import { useInit, getFilteredSelectedItems, getUpdateFilters } from './GridView.hooks';
 import { IGridViewActions } from './GridView.actions';
 import { QuickActionSection as QuickActionSectionDefault } from './QuickActionSection';
 import { FilterTags } from './FilterTag';
-import { GridFilterPanel } from './GridFilters';
+import { GridFilterPanel, GridFilters } from './GridFilters';
 import { StatusMessages } from './StatusMessage';
 import { GridSummary } from './GridSummary';
 import { gridViewStyles } from './GridView.styles';
@@ -46,6 +39,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   // #region "State initialization"
   const classes = useStyles();
   const {
+    QuickActionSection,
     QuickActionSectionComponent,
     GridSummaryComponent,
     FilterTagsComponent,
@@ -62,17 +56,10 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     onSelectionChange
   };
   const { state, actions, selection } = useInit(props, callBacks);
-  const [showFilters, toggleFilters] = useState(false);
-  const [filtersToApply, setFiltersToApply] = useState<IGridFilter[]>();
-  const [filtersData, setFiltersData] = useState<IGridFilter[]>([]);
-  const [statusMessages, setStatusMessages] = useState<IGridViewMessageData[]>([]);
-
   const stateRef = React.useRef<IGridViewData>();
-  const actionsRef = React.useRef<any>();
-  const msgRef = React.useRef<IGridViewMessageData[]>();
+  const actionsRef = React.useRef<IGridViewActions>();
   stateRef.current = state;
   actionsRef.current = actions;
-  msgRef.current = statusMessages;
 
   React.useEffect(() => {
     updateMessageList(props.statusMessages);
@@ -138,7 +125,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         ? state.paginatedFilteredItems
         : state.items;
     return items;
-  }; 
+  };
 
   const getSelections = (changeType?: GridViewChangeType, value?: any) => {
     const defaultSelections: IDefaultSelections = {
@@ -173,8 +160,8 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         };
         newMessageList.push(newMessage);
       });
-    const messages = newMessageList.concat(statusMessages);
-    setStatusMessages(messages);
+    const messages = newMessageList.concat(state.statusMessages || []);
+    actions.setData({ statusMessages: messages });
     let filteredMessages = messages.filter((msg) => msg.autoDismiss === true);
     filteredMessages = filteredMessages.filter((item) => item.removePending === undefined);
     filteredMessages.forEach((item) => {
@@ -192,25 +179,33 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   const getUpdatedMessageList = (messages: IGridViewMessageData[] = []) => messages.slice(0, 2);
   const onDismissMessage = (message: IGridViewMessageData, useRef?: boolean) => {
-    const messages = [...(useRef ? msgRef.current! : statusMessages)];
+    const messages = [...(useRef ? stateRef.current?.statusMessages! : state.statusMessages || [])];
     const index = messages.findIndex((item) => item.id === message.id);
     if (index > -1) {
       messages.splice(index, 1);
-      setStatusMessages(messages);
+      actions.setData({ statusMessages: messages });
     }
   };
 
   const onToggleFilter = (showFilter: boolean) => {
-    if (showFilter && props.gridViewType === GridViewType.ServerSide) {
-      setFiltersData(cloneDeep(state.filters!));
-      setFiltersToApply(cloneDeep(state.selectedFilters!));
+    if (!props.showFiltersAside && showFilter && props.gridViewType === GridViewType.ServerSide) {
+      actions.setData({ availableFilters: cloneDeep(state.filters!) });
+      actions.setData({ filtersToApply: cloneDeep(state.selectedFilters!) });
     }
-    toggleFilters(showFilter);
+    actions.setData({ showFilters: !state.showFilters });
   };
 
   function onColumnClick(e: React.MouseEvent<HTMLElement>, column: IGridColumn) {
     onColumnSort(e, column);
   }
+
+  const resetSelection = () => {
+    if (selection && selection.count > 0) {
+      isInitialLoad = true;
+      stateRef.current!.selectedItems = [];
+      selection.setAllSelected(false);
+    }
+  };
 
   const onColumnSort = (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => {
     const currentState = stateRef.current as IGridViewData;
@@ -299,7 +294,9 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   const onFilterChange = (filter: IGridFilter) => {
     let selectedFilters =
-      props.gridViewType === GridViewType.InMemory ? state.selectedFilters : filtersToApply;
+      props.gridViewType === GridViewType.InMemory || props.showFiltersAside
+        ? state.selectedFilters
+        : state.filtersToApply;
     selectedFilters = selectedFilters || [];
     const filterIndex = selectedFilters.findIndex((item) => item.id === filter.id);
     if (filterIndex > -1) {
@@ -314,25 +311,24 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       item.isCurrent = filter ? filter.id === item.id : false;
       return item;
     });
-    if (props.gridViewType === GridViewType.InMemory) {
+    if (props.gridViewType === GridViewType.InMemory || props.showFiltersAside) {
       onFiltersChange(selectedFilters);
     } else {
-      setFiltersToApply(selectedFilters);
-      const filters = getUpdateFilters(filtersData, selectedFilters, [], undefined, false);
-      setFiltersData(filters);
+      actions.setData({ filtersToApply: selectedFilters });
+      const filters = getUpdateFilters(
+        state.availableFilters || [],
+        selectedFilters,
+        [],
+        undefined,
+        false
+      );
+      actions.setData({ availableFilters: filters });
     }
   };
 
   const onApplyFilters = () => {
-    onFiltersChange(filtersToApply!);
-    setFiltersToApply([]);
-    resetSelection();
-    props.onHandleChange &&
-      props.onHandleChange(
-        getSelections(GridViewChangeType.SelectedFilters, filtersToApply),
-        GridViewChangeType.SelectedFilters
-      );
-    toggleFilters(false);
+    onFiltersChange(state.filtersToApply!);
+    actions.setData({ showFilters: false, filtersToApply: [] });
   };
 
   const onApplyFilter = (filter: IGridFilter) => {
@@ -389,14 +385,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     onFiltersChange([]);
   };
 
-  const resetSelection = () => {
-    if (selection && selection.count > 0) {
-      isInitialLoad = true;
-      stateRef.current!.selectedItems = [];
-      selection.setAllSelected(false);
-    }
-  };
-
   const onSort = (sortingOptions: ISortingOptions[]) => {
     const currentState = stateRef.current as IGridViewData;
     const currentActions = actionsRef.current as IGridViewActions;
@@ -432,11 +420,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       return;
     }
     actions.applyGrouping(column);
-    if (selection.count !== 0) {
-      isInitialLoad = true;
-      stateRef.current!.selectedItems = [];
-      selection.setAllSelected(false);
-    }
+    resetSelection();
     props.onHandleChange &&
       props.onHandleChange(
         getSelections(GridViewChangeType.GroupBy, state.groupColumn?.key),
@@ -473,6 +457,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       onDelete: props.onDelete ? onDelete : undefined,
       selectedItems: state.selectedItems,
       // leftItemsOrder: props.actionBarItemsOrder,
+      actionBarItems: props.actionBarItems,
       quickActionSectionItems: props.quickActionSectionItems,
       allowGroupSelection: props.allowGrouping && props.allowGroupSelection,
       groupColumn: state.groupColumn,
@@ -491,12 +476,15 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   const getMessageSection = () => {
     if (StatusMessageSectionComponent) {
       return (
-        <StatusMessageSectionComponent messages={statusMessages} onDissmiss={onDismissMessage} />
+        <StatusMessageSectionComponent
+          messages={state.statusMessages}
+          onDissmiss={onDismissMessage}
+        />
       );
     }
     return (
       <StatusMessages
-        messages={getUpdatedMessageList(statusMessages)}
+        messages={getUpdatedMessageList(state.statusMessages)}
         onDismiss={onDismissMessage}
       />
     );
@@ -581,12 +569,37 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     );
   };
 
-  const getGridViewSection = () => (
-    <div className={classes.gridViewData}>
-      {getGridViewData()}
-      {getGridViewSideFilter()}
-    </div>
-  );
+  const getGridViewSection = () => {
+    if (props.showFiltersAside) {
+      return (
+        <div className={classes.fliterGridContainer}>
+          {state.showFilters && (
+            <div className={classes.filtersSection}>{getGridViewFilters()}</div>
+          )}
+          <div
+            className={
+              state.showFilters ? classes.gridViewWithFilters : classes.gridViewWithoutFilters
+            }
+          >
+            {getGridSummarySection()}
+            {getGridViewData()}
+            {getNoResultsSection()}
+            {getPager()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className={classes.gridViewData}>
+          {getGridViewFilterAsSidePanel()}
+          {getGridSummarySection()}
+          {getGridViewData()}
+          {getNoResultsSection()}
+          {getPager()}
+        </div>
+      );
+    }
+  };
 
   const getHighLightedColumns = (columns: IGridColumn[]) => {
     let searchableColumns = columns.filter((col) => col.searchable === true && !col.onRender);
@@ -655,12 +668,42 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     );
   };
 
-  const getGridViewSideFilter = () => {
-    const filters = props.gridViewType === GridViewType.InMemory ? state.filters : filtersData;
+  const getGridViewFilters = () => {
+    if (!state.showFilters) {
+      return null;
+    }
+    const filters =
+      props.gridViewType === GridViewType.InMemory ? state.filters : state.availableFilters;
+    if (SideFilterComponent) {
+      return (
+        <aside>
+          <SideFilterComponent
+            showFilters={state.showFilters}
+            toggleFilters={onToggleFilter}
+            filters={filters}
+            onFilterChange={onFilterChange}
+            onApplyFilters={
+              state.gridViewType === GridViewType.ServerSide ? onApplyFilters : undefined
+            }
+          />
+        </aside>
+      );
+    }
+    return (
+      <aside>
+        <div className={classes.filtersHeader}>Filters</div>
+        <GridFilters filters={state.filters || []} onFilterChange={onFilterChange} />
+      </aside>
+    );
+  };
+
+  const getGridViewFilterAsSidePanel = () => {
+    const filters =
+      props.gridViewType === GridViewType.InMemory ? state.filters : state.availableFilters;
     if (SideFilterComponent) {
       return (
         <SideFilterComponent
-          showFilters={showFilters}
+          showFilters={state.showFilters}
           toggleFilters={onToggleFilter}
           filters={filters}
           onFilterChange={onFilterChange}
@@ -672,7 +715,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     }
     return (
       <GridFilterPanel
-        showFilters={showFilters}
+        showFilters={state.showFilters === true}
         toggleFilters={onToggleFilter}
         filters={filters!}
         onFilterChange={onFilterChange}
@@ -924,10 +967,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   const mergeClassNames = (classNames: (string | undefined)[]) =>
     classNames.filter((className) => !!className).join(' ');
 
-  const gridActionSectionClass = props.actionSectionClass
-    ? mergeClassNames([classes.gridViewtopSection, props.actionSectionClass])
-    : classes.gridViewtopSection;
-
   const gridContainerClass = props.gridContainerClass
     ? mergeClassNames([classes.gridView, props.gridContainerClass])
     : classes.gridView;
@@ -936,24 +975,12 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   return (
     <GridViewContext.Provider value={{ state, actions }}>
       <div className={gridContainerClass}>
-        <div className={gridActionSectionClass}>
+        <div className={classes.gridViewtopSection}>
           {getQuickActionSection()}
           {getMessageSection()}
           {getSelectedFiltersSection()}
         </div>
-
-        <div className={props.gridMainClass}>
-          {props.isLoading ? (
-            getGridShimmer()
-          ) : (
-            <>
-              {getGridSummarySection()}
-              {getGridViewSection()}
-              {getNoResultsSection()}
-              {getPager()}
-            </>
-          )}
-        </div>
+        {props.isLoading ? getGridShimmer() : <>{getGridViewSection()}</>}
       </div>
     </GridViewContext.Provider>
   );

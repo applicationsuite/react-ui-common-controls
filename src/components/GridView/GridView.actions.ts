@@ -22,7 +22,8 @@ export const GRIDVIEW_ACTIONS = {
   SET_FILTERS_TO_APPLY: 'setFiltersToApply',
   SET_FILTER_TO_APPLY: 'setFilterToApply',
   SET_SELECTED_FILTERS: 'setSelectedFilters',
-  SET_GROUPS: 'setGroups'
+  SET_GROUPS: 'setGroups',
+  SET_DATA: 'setData'
 };
 
 export interface IGridViewActions {
@@ -34,6 +35,5 @@ export interface IGridViewActions {
   applySelectedItems: (selectedItems: any[]) => void;
   applySelectedColumns: (selectedColumns: IGridColumn[]) => void;
   applyGrouping: (column?: IGridColumn) => void;
-  setFiltersToApply: (filters?: IGridFilter[]) => void;
-  setFilterToApply: (filter?: IGridFilter) => void;
+  setData: (data: any) => void;
 }

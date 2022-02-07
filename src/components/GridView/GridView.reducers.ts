@@ -43,6 +43,9 @@ export const gridViewReducer = (state: any, action: any) => {
     case GRIDVIEW_ACTIONS.SET_GROUP_COLUMN: {
       return { ...state, groupColumn: action.data };
     }
+    case GRIDVIEW_ACTIONS.SET_DATA: {
+      return { ...state, ...action.data };
+    }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }

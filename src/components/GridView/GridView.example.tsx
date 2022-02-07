@@ -60,8 +60,7 @@ export const GridViewExample = () => {
   };
 
   const [selections, setSelection] = React.useState<IDefaultSelections>({
-    sortingOptions: [sortingOptions],
-    selectedItems: [items[0]]
+    sortingOptions: [sortingOptions]
   });
   const selectionsRef = React.useRef<IDefaultSelections>();
   selectionsRef.current = selections;
@@ -125,6 +124,7 @@ export const GridViewExample = () => {
       fieldName: 'name',
       minWidth: 210,
       maxWidth: 210,
+      isRowHeader: true,
       isResizable: true,
       isSortedDescending: false,
       sortAscendingAriaLabel: 'Sorted A to Z',
@@ -336,7 +336,7 @@ export const GridViewExample = () => {
   };
   return (
     <>
-      <button type="button" onClick={updateSelection}>
+      <button type="button" onClick={onSetErrors}>
         Set Errors
       </button>
       <div className="ms-Grid-row">
@@ -362,8 +362,8 @@ export const GridViewExample = () => {
           // }}
           quickActionSectionItems={getQuickActionBarItems()}
           highLightSearchText={true}
-          allowSelection={true}
-          allowGrouping={true}
+          // allowSelection={true}
+          // allowGrouping={true}
           // allowGroupSelection={true}
           // isLoading={true}
           // allowMultiLevelSorting={true}
@@ -380,6 +380,9 @@ export const GridViewExample = () => {
           // quickSearchOnEnter={true}
           // exportOptions={[{ fileType: 'Excel' }, { fileType: 'Json' }]}
           // quickSearchOnEnter = {true}
+          // selectFirstItemOnLoad={true}
+          // showFiltersAside={true}
+          // showFiltersOnLoad={true}
           onHandleChange={onHandleChange}
           onRefresh={onRefresh}
           // onExport={onExport}
@@ -396,3 +399,4 @@ export const GridViewExample = () => {
     </>
   );
 };
+
