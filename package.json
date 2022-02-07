@@ -1,6 +1,6 @@
 {
   "name": "react-ui-common-controls",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "This is a UI library created on the design language of bootstrap and Microsoft fluent UI",
   "main": "index.js",
   "dependencies": {
