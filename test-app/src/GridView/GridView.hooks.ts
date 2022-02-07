@@ -33,29 +33,25 @@ import {
 
 export const useInit = (props: IGridViewParams, callbacks: IGridViewCallbacks) => {
   const [state, dispatch] = useReducer(gridViewReducer, {});
+  const selection = useSelection(props, callbacks.onSelectionChange);
   const actions = gridViewActions(dispatch, state) as IGridViewActions;
   useEffect(() => {
     actions.initialize(props, callbacks);
+    updateSelections(props, selection);
   }, [props.items]);
-  return { state: state as IGridViewData, actions };
+  return { state: state as IGridViewData, actions, selection };
 };
 
-export const useSelection = (
-  handleSelectionChange: (selection: Selection<IObjectWithKey>) => void,
-  items: any[],
-  itemUniqueField: string
-) => {
+export const useSelection = (props: IGridViewParams, handleSelectionChange: any) => {
   const selection = useMemo(() => {
-    // const itemsWithKey = items.map((item) => {
-    //   return { ...item, key: item[itemUniqueField] };
-    // });
+    const filteredItems = props.selectFirstItemOnLoad ? getFilterData(props) : props.items;
     return new Selection({
       onSelectionChanged: () => {
         handleSelectionChange(selection);
       },
-      items: items
+      items: filteredItems
     });
-  }, [items]);
+  }, [props.items]);
   return selection;
 };
 
@@ -75,14 +71,18 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         totalRecords:
           props.totalRecords || props.totalRecords === 0 ? props.totalRecords : props.items.length,
         columns: updateColumns(
-          props.columns,
+          state.columns ? state.columns : props.columns,
           sortingOptions!,
           callbacks.onColumnClick,
           props.removeSorting || props.allowMultiLevelSorting
         ),
         allowGrouping: props.allowGrouping || (props.groups && props.groups.length > 0),
         allowGroupSelection: props.allowGroupSelection,
-        allowSelection: props.allowSelection
+        allowSelection: props.allowSelection,
+        statusMessages: state.statusMessages ? state.statusMessages : [],
+        filtersToApply: [],
+        availableFilters: [],
+        showFilters: props.showFiltersOnLoad
       };
 
       let filteredItems = [...props.items];
@@ -150,7 +150,11 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
       initialData.pagingOptions = pagingOptions;
       initialData.sortingOptions = props.sortingOptions;
       initialData.selectedFilters = props.selectedFilters || [];
-      initialData.selectedItems = props.selectedItems;
+      initialData.selectedItems = getFilteredSelectedItems(
+        props.items,
+        props.selectedItems!,
+        props.itemUniqueField!
+      );
       initialData.searchText = props.searchText;
       dispatch({ type: GRIDVIEW_ACTIONS.INITIALIZE, data: initialData });
     },
@@ -443,16 +447,10 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         data: selectedColumns
       });
     },
-    setFiltersToApply: (filters?: IGridFilter[]) => {
+    setData: (data: any) => {
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTERS_TO_APPLY,
-        data: filters
-      });
-    },
-    setFilterToApply: (filter?: IGridFilter) => {
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_TO_APPLY,
-        data: filter
+        type: GRIDVIEW_ACTIONS.SET_DATA,
+        data: data
       });
     }
   };
@@ -678,7 +676,10 @@ const updateColumns = (
         ? sortingOptions.sortType === SORT_TYPE.DESC
         : undefined;
     }
-    column.selected = column.required || column.selected;
+    column.selected =
+      column.required === undefined && column.selected === undefined
+        ? true
+        : column.required || column.selected;
     column.onColumnClick = column.onColumnClick || onColumnSort;
   });
   return columns;
@@ -693,4 +694,62 @@ const getPagingOptions = (pagingOptions?: IPagingOptions) => {
     };
   }
   return options;
+};
+
+const updateSelections = (props: IGridViewParams, selection: Selection) => {
+  if (
+    !(props.selectedItems && props.selectedItems.length) &&
+    props.selectFirstItemOnLoad &&
+    props.items.length
+  ) {
+    let items = selection.getItems();
+    let firstItem: any = items.length && items[0];
+    if (firstItem) {
+      let index = items.findIndex(
+        (item: any) => item[props.itemUniqueField!] === firstItem[props.itemUniqueField!]
+      );
+      if (index >= 0) {
+        selection.setIndexSelected(index, true, false);
+      }
+    }
+  }
+};
+
+const getFilterData = (props: IGridViewParams) => {
+  if (props.gridViewType === GridViewType.ServerSide) {
+    return props.items;
+  }
+
+  let filteredItems = [...props.items];
+
+  // Applying Filters
+  filteredItems = applyFilters(props.selectedFilters!, filteredItems);
+
+  filteredItems = applySearchText(
+    props.searchText!,
+    filteredItems,
+    props.searchFields!,
+    props.itemUniqueField
+  );
+
+  // Applying sort
+  if (props.sortingOptions && props.sortingOptions.length) {
+    filteredItems = applySorting(filteredItems, props.sortingOptions[0]);
+  }
+  return filteredItems;
+};
+
+export const getFilteredSelectedItems = (
+  items: any[],
+  selectedItems: any[],
+  itemUniqueField: string
+) => {
+  let filteredSelectedItems: any[] = [];
+  selectedItems &&
+    selectedItems.length &&
+    selectedItems.forEach((selectedItem) => {
+      let selected = items.find((item) => item[itemUniqueField] === selectedItem[itemUniqueField]);
+      selected && filteredSelectedItems.push(selected);
+    });
+  return filteredSelectedItems;
 };

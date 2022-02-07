@@ -6,7 +6,7 @@ export const gridSummaryStyles = (theme: string) => ({
   },
   summaryText: {
     color: 'black',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 500
   }
 });

@@ -141,8 +141,8 @@ export const MultiColumnSort: React.FC<IMultiColumnSort> = (props) => {
         <Stack.Item grow className={classes.footerLeftBtns}>
           <DefaultButton
             className={classes.resetButton}
-            ariaLabel="Reset"            
-            iconProps={{iconName: "RevToggleKey"}} 
+            ariaLabel="Reset"
+            iconProps={{ iconName: 'RevToggleKey' }}
             text="Reset"
             onClick={onClearSorting}
           />

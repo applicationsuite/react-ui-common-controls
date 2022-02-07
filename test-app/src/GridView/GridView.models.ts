@@ -1,6 +1,7 @@
 import React from 'react';
 import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react';
 import { IGridViewActions } from './GridView.actions';
+import { PageType } from 'react-ui-common-controls';
 
 export enum GridViewType {
   InMemory = 0,
@@ -64,9 +65,24 @@ export enum QucickActionSectionAlignment {
   Right = 1
 }
 
-export enum PageType {
-  Previous = 0,
-  Next = 1
+export enum GridViewChangeType {
+  SelectedFilters = 0,
+  SearchText = 1,
+  Pagination = 2,
+  Sorting = 3,
+  SelectedItems = 4,
+  GroupBy = 5
+}
+
+export enum GridViewGroupLabelType {
+  GroupValue = 0,
+  GroupValueAndCount = 1,
+  ColumnNameAndGroupValueAndCount = 2
+}
+
+export enum ActionBarSectionType {
+  Left = 0,
+  Right = 1
 }
 
 export const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
@@ -116,6 +132,11 @@ export const GRIDVIEW_LOCALIZATION_CONSTANTS = {
   }
 };
 
+export interface IGridViewContextData {
+  state: IGridViewData;
+  actions: IGridViewActions;
+}
+
 export interface IDefaultSelections {
   pagingOptions?: IPagingOptions;
   sortingOptions?: ISortingOptions[];
@@ -123,26 +144,6 @@ export interface IDefaultSelections {
   searchText?: string;
   selectedItems?: any[];
   groupBy?: string;
-}
-
-export enum GridViewChangeType {
-  SelectedFilters = 0,
-  SearchText = 1,
-  Pagination = 2,
-  Sorting = 3,
-  SelectedItems = 4,
-  GroupBy = 5
-}
-
-export enum GridViewGroupLabelType {
-  GroupValue = 0,
-  GroupValueAndCount = 1,
-  ColumnNameAndGroupValueAndCount = 2
-}
-
-export enum ActionBarSectionType {
-  Left = 0,
-  Right = 1
 }
 
 export interface IGridViewData {
@@ -165,13 +166,11 @@ export interface IGridViewData {
   allowSelection?: boolean;
   allowGrouping?: boolean;
   allowGroupSelection?: boolean;
+  availableFilters?: IGridFilter[];
   filtersToApply?: IGridFilter[];
   filterToApply?: IGridFilter;
-}
-
-export interface IGridViewContextData {
-  state: IGridViewData;
-  actions: IGridViewActions;
+  statusMessages?: IGridViewMessageData[];
+  showFilters?: boolean;
 }
 
 export interface IPagingOptionsWithoutPage {
@@ -263,6 +262,9 @@ export interface IGridViewParams extends IDetailsListProps {
   hideGridSummary?: boolean; // hide the items count and selection count message.
   highLightSearchText?: boolean; //highlights the quick search text
   hideClearFilters?: boolean; //hides the clear filters button in the filter tags
+  selectFirstItemOnLoad?: boolean; //select first item on load
+  showFiltersAside?: boolean;
+  showFiltersOnLoad?: boolean;
 
   // Selections
   pagingOptions?: IPagingOptions; // paging options for the gridview
@@ -283,17 +285,8 @@ export interface IGridViewParams extends IDetailsListProps {
   maxSelection?: Number; // if you want a limit on maximum number of item selection
   maxFilterTagLength?: number; // max length of visible filter tag values
   exportOptions?: IExportOptions[]; // export options is for export functionality
-  /**
-   * @deprecated actionBarItems will be removed in future versions. Please use quickActionBarItems instead.
-   */
-  actionBarItems?: IActionBarItems; // this is to customize the action bar items like filters, quick search
   quickActionSectionItems?: IQucickActionSectionItem[]; // this is to customize the action bar items like filters, quick search
 
-  // React Components. Use this if you want to pass a custom component for individual section
-  /**
-   * @deprecated QuickActionSection will be removed in future versions. Please use quickActionSectionItems custom onReder instead.
-   */
-  QuickActionSection?: any;
   QuickActionSectionComponent?: any;
   FilterTagsComponent?: any;
   GridSummaryComponent?: any;
@@ -394,6 +387,7 @@ export interface IExportOptions {
 }
 
 export interface IGridViewCallbacks {
+  onSelectionChange?: () => void;
   onColumnClick?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
   onGroupHeaderRender?: (e: React.MouseEvent<HTMLElement>, column: IGridColumn) => void;
 }

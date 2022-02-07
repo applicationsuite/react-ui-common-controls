@@ -6,7 +6,7 @@ import {
   IQucickActionSectionItem,
   QucickActionSectionAlignment
 } from '../GridView.models';
-import {SORT_TYPE, applySorting} from 'react-ui-common-controls'
+import { SORT_TYPE, applySorting } from 'react-ui-common-controls';
 import { IIconProps } from '@fluentui/react';
 
 const moreIcon: IIconProps = { iconName: 'more' };

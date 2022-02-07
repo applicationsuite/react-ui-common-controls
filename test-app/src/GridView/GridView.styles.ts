@@ -11,6 +11,32 @@ export const gridViewStyles = (theme: string) => ({
   gridViewSection: {
     borderTop: `1px solid`
   },
+  fliterGridContainer: {
+    display: 'flex'
+  },
+  filtersSection: {
+    width: '20%',
+    marginLeft: '10px',
+    paddingRight: '10px',
+    marginRight: '12px',
+    borderRight: '1px solid lightgrey'
+  },
+  borderRight: {
+    borderRight: '1px solid lightgrey'
+  },
+  gridViewWithoutFilters: {
+    width: '100%'
+  },
+  gridViewWithFilters: {
+    width: '80%'
+  },
+  filtersHeader: {
+    fontSize: '18px',
+    fontWeight: 550,
+    margin: '10px 3px 10px 3px',
+    borderBottom: '1px solid lightgrey',
+    paddingBottom: '12px'
+  },
   gridViewData: {
     '& .ms-DetailsList-contentWrapper': {
       // minHeight: '400px'
