@@ -4,7 +4,7 @@ export const gridFilterStyles = (theme: string) => ({
     border: '1px solid lightgrey'
   },
   filterMain: {
-    paddingTop: '20px',
+    paddingTop: '10px',
     lineHeight: '16px'
   },
   applyBtn: {
