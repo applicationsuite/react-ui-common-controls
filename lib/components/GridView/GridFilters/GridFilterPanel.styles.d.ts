@@ -9,6 +9,7 @@ export declare const gridFilterPanelStyles: (theme: string) => {
         fontSize: number;
         '& .ms-Panel-header': {
             paddingLeft: string;
+            paddingBottom: string;
         };
         '& .ms-Panel-content': {
             paddingLeft: string;
