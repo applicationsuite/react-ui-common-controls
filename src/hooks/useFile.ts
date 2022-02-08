@@ -6,7 +6,7 @@ export const getFile = async (fileName: string, baseUrl?: string) => {
     .catch((error) => console.log('Error in loading Config file'));
 };
 
-export const useFile = (file: string) => {
+export const useFile: any = (file: string) => {
   const [fileData, setFileData] = React.useState();
   React.useEffect(() => {
     (async () => {

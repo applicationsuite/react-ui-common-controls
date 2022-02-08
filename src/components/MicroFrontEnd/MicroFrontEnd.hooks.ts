@@ -36,7 +36,7 @@ const microFrontEndActions = (dispatch: any, state: IMicroFrontEndInfo) => {
       return initialData;
     },
     updateData: (data: any) => {
-      dispatch({ type: MICRO_FRONTEND_ACTIONS.INITIALIZE, data: data });
+      dispatch({ type: MICRO_FRONTEND_ACTIONS.UPDATE, data: data });
     }
   };
   return actions;

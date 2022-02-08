@@ -1,7 +1,8 @@
 import { IMicroFrontEndInfo, IMicroFrontEndProps } from './MicroFrontEnd.models';
 
 export const MICRO_FRONTEND_ACTIONS = {
-  INITIALIZE: 'initialize'
+  INITIALIZE: 'initialize',
+  UPDATE: 'update'
 };
 
 export interface IMicroFrontEndActions {
