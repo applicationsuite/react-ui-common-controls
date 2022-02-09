@@ -9,15 +9,18 @@ export interface IAzureAuthProviderConfig {
     cacheLocation: string;
     storeAuthStateInCookie: boolean;
     scopes: string[];
+    onAuthInfoUpdate: (authInfo: IAuthInfo) => void;
 }
 export interface IAzureADProps extends IAzureAuthProviderConfig {
-    disableAutoInitialize: boolean;
+    disableAutoLogin: boolean;
+    LoginErrorComponent: any;
 }
 export interface IAzureADData extends IAzureADProps {
     msalInstance: MSALAuthProvider;
     authInfo?: IAuthInfo;
 }
-export interface IAzureADContext extends IAzureADData {
+export interface IAzureADContext {
+    authInfo?: IAuthInfo;
     login: () => void;
     logOut: () => void;
 }

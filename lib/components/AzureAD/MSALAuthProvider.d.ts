@@ -4,6 +4,7 @@ export declare class MSALAuthProvider {
     config: IAzureAuthProviderConfig;
     clientApplication: PublicClientApplication;
     authInfo?: IAuthInfo;
+    error?: any;
     constructor(authProviderConfig: IAzureAuthProviderConfig);
     initialize: () => Promise<void>;
     login: () => Promise<void>;

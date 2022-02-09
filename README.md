@@ -18,9 +18,10 @@ To install the library run the following command -
 | Controls                                     | Date Modified |
 | -------------------------------------------- | ------------- |
 | [AppWrapper](docs/AppWrapper.md)             | 2022-01-23    |
+| [AzureAD](docs/AzureAD.md)                   | 2022-02-09    |
 | [ErrorBoundary](docs/ErrorBoundary.md)       | 2022-01-23    |
 | [FileUpload](docs/FileUpload.md)             | 2022-01-23    |
-| [GridView](docs/GridView.md)                 | 2022-01-24    |
+| [GridView](docs/GridView.md)                 | 2022-02-07    |
 | [HighlightText](docs/HighlightText.md)       | 2022-01-23    |
 | [LanguageProvider](docs/LanguageProvider.md) | 2022-01-23    |
 | [Logger](docs/Logger.md)                     | 2022-01-23    |
@@ -30,6 +31,10 @@ To install the library run the following command -
 | [Wizard](docs/Wizard.md)                     | 2022-01-23    |
 
 ## Release Notes
+
+#### 1.0.8 (2022-02-09)
+
+- Azure AD - This component enables Azure AAD login
 
 #### 1.0.7 (2022-02-07)
 

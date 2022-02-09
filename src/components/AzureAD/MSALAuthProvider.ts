@@ -11,6 +11,7 @@ export class MSALAuthProvider {
   config: IAzureAuthProviderConfig;
   clientApplication: PublicClientApplication;
   authInfo?: IAuthInfo;
+  error?: any;
 
   constructor(authProviderConfig: IAzureAuthProviderConfig) {
     this.config = authProviderConfig;
@@ -37,19 +38,29 @@ export class MSALAuthProvider {
   }
 
   initialize = async () => {
-    let authResult = await this.clientApplication.handleRedirectPromise();
+    let authResult = await this.clientApplication.handleRedirectPromise().catch((e) => {
+      this.error = e;
+      console.error(e);
+    });
     if (authResult) {
       this.setUserInfo(authResult);
       this.authInfo && this.acquireToken(this.authInfo.user);
+    } else {
+      this.login();
     }
   };
 
   login = async () => {
     if (!this.authInfo) {
-      await this.clientApplication.loginRedirect({
-        scopes: this.config.scopes,
-        prompt: SELECT_ACCOUNT
-      });
+      await this.clientApplication
+        .loginRedirect({
+          scopes: this.config.scopes,
+          prompt: SELECT_ACCOUNT
+        })
+        .catch((e) => {
+          this.error = e;
+          console.error(e);
+        });
     }
   };
 
@@ -58,7 +69,10 @@ export class MSALAuthProvider {
       return;
     }
     const account = this.clientApplication.getAccountByUsername(this.authInfo!.user!.username);
-    this.clientApplication.logoutRedirect({ account: account });
+    this.clientApplication.logoutRedirect({ account: account }).catch((e) => {
+      this.error = e;
+      console.error(e);
+    });
   };
 
   acquireToken = (account: AccountInfo | null) => {
@@ -76,7 +90,8 @@ export class MSALAuthProvider {
             return authResult.idToken;
           }
         })
-        .catch((tokenSilentError: any) => {
+        .catch((e: any) => {
+          this.error = e;
           _this.clientApplication.acquireTokenRedirect({
             scopes: _this.config.scopes,
             prompt: SELECT_ACCOUNT
@@ -91,6 +106,7 @@ export class MSALAuthProvider {
       jwtIdToken: authResult.idToken,
       user: authResult.account
     };
+    this.config.onAuthInfoUpdate && this.config.onAuthInfoUpdate(this.authInfo);
   };
 
   getAccount = () => {
