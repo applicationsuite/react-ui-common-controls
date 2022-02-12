@@ -1,5 +1,9 @@
 # Release Notes
 
+#### 1.1.1 (2022-02-12)
+
+- File re-structuring and md file updates
+
 #### 1.1.0 (2022-02-12)
 
 - Gridview - Selection Bug Fix
