@@ -6,6 +6,6 @@ export declare const useInit: (props: IGridViewParams, callbacks: IGridViewCallb
     actions: IGridViewActions;
     selection: Selection<any>;
 };
-export declare const useSelection: (props: IGridViewParams, handleSelectionChange: any) => Selection<any>;
+export declare const useSelection: (props: IGridViewParams, handleSelectionChange: any, state: IGridViewData) => Selection<any>;
 export declare const getUpdateFilters: (gridFilters: IGridFilter[], selectedFilters: IGridFilter[], items: any[], oldItems?: any[] | undefined, isInMemory?: boolean) => IGridFilter[];
 export declare const getFilteredSelectedItems: (items: any[], selectedItems: any[], itemUniqueField: string) => any[];

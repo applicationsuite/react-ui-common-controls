@@ -82,15 +82,16 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   }
 
   React.useEffect(() => {
+    if (!props.allowSelection) {
+      return;
+    }
     let filteredSelectedItems = getFilteredSelectedItems(
       props.items,
       props.selectedItems!,
       props.itemUniqueField!
     );
     if (!compareSelections(filteredSelectedItems, state.selectedItems!)) {
-      props.allowSelection &&
-        props.selectedItems &&
-        updateSelections(filteredSelectedItems!, props.itemUniqueField!);
+      props.selectedItems && updateSelections(filteredSelectedItems!, props.itemUniqueField!);
     }
   }, [props.selectedItems]);
 
@@ -199,7 +200,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   }
 
   const resetSelection = () => {
-    if (selection && selection.count > 0) {
+    if (props.allowSelection && selection && selection.count > 0) {
       isInitialLoad = true;
       stateRef.current!.selectedItems = [];
       selection.setAllSelected(false);
@@ -637,7 +638,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
             {...props}
             items={items || []}
             columns={columns}
-            selection={selection}
+            selection={props.allowSelection ? selection : undefined}
             groups={props.allowGrouping ? props.groups || state.groups : undefined}
           />
         </div>
@@ -659,7 +660,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           {...props}
           items={items || []}
           columns={columns}
-          selection={selection}
+          selection={props.allowSelection ? selection : undefined}
           groups={props.allowGrouping ? props.groups || state.groups : undefined}
         />
       </div>

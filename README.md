@@ -17,6 +17,7 @@ To install the library run the following command -
 
 | Controls                                     | Date Modified |
 | -------------------------------------------- | ------------- |
+| [Accordion](docs/Accordion.md)               | 2022-02-12    |
 | [AppWrapper](docs/AppWrapper.md)             | 2022-01-23    |
 | [AzureAD](docs/AzureAD.md)                   | 2022-02-09    |
 | [ErrorBoundary](docs/ErrorBoundary.md)       | 2022-01-23    |
@@ -31,6 +32,11 @@ To install the library run the following command -
 | [Wizard](docs/Wizard.md)                     | 2022-01-23    |
 
 ## Release Notes
+
+#### 1.0.9 (2022-02-12)
+
+- Gridview - Selection Bug Fix
+- Accordion - New control is added
 
 #### 1.0.8 (2022-02-09)
 

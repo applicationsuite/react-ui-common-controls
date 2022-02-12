@@ -33,24 +33,36 @@ import {
 
 export const useInit = (props: IGridViewParams, callbacks: IGridViewCallbacks) => {
   const [state, dispatch] = useReducer(gridViewReducer, {});
-  const selection = useSelection(props, callbacks.onSelectionChange);
+  const selection = useSelection(props, callbacks.onSelectionChange, state);
   const actions = gridViewActions(dispatch, state) as IGridViewActions;
   useEffect(() => {
     actions.initialize(props, callbacks);
-    updateSelections(props, selection);
+    props.allowSelection && updateSelections(props, selection);
   }, [props.items]);
   return { state: state as IGridViewData, actions, selection };
 };
 
-export const useSelection = (props: IGridViewParams, handleSelectionChange: any) => {
+export const useSelection = (
+  props: IGridViewParams,
+  handleSelectionChange: any,
+  state: IGridViewData
+) => {
   const selection = useMemo(() => {
+    if (!props.allowSelection) {
+      return new Selection();
+    }
     const filteredItems = props.selectFirstItemOnLoad ? getFilterData(props) : props.items;
-    return new Selection({
-      onSelectionChanged: () => {
-        handleSelectionChange(selection);
-      },
-      items: filteredItems
-    });
+    let firstLoad = state.items.length !== props.items.length;
+    if (filteredItems && filteredItems.length) {
+      return new Selection({
+        onSelectionChanged: () => {
+          !firstLoad && handleSelectionChange(selection);
+          firstLoad = false;
+        },
+        items: filteredItems
+      });
+    }
+    return new Selection();
   }, [props.items]);
   return selection;
 };

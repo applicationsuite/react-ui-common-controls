@@ -1,6 +1,7 @@
 import { createUseStyles } from 'react-jss';
 import * as React from 'react';
 import { filterLabelStyles } from './GridFilterLabel.styles';
+import { Accordion } from '../..';
 
 const useStyles = createUseStyles(filterLabelStyles);
 
@@ -12,8 +13,14 @@ export const GridFilterLabel: React.FC<{
   const classes = useStyles();
   return (
     <div className="grid-filter-label">
-      <div className={classes.filterLabel}>{filterName}</div>
-      {children}
+      {isFilterCollapsible ? (
+        <Accordion headerText={filterName}>{children}</Accordion>
+      ) : (
+        <>
+          <div className={classes.filterLabel}>{filterName}</div>
+          {children}
+        </>
+      )}
     </div>
   );
 };
