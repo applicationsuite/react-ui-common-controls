@@ -48,8 +48,9 @@ The project is being initially developed and maintained by Chinmaya Kumar Panda.
 The contribution to this libray is open, so any contribution is very welcome.
 We welcome you to raise issues, add your new requirements or use cases, so that we will close them asap.
 
-For contributing to this library, please reach out to me on the following email -
-visit.chinmaya@gmail.com
+For contributing to this library, please reach out to me on the [email](visit.chinmaya@gmail.com)
+
+
 
 <!-- [AppWrapper](#AppWrapper)
 [ErrorBoundary](#ErrorBoundary)
