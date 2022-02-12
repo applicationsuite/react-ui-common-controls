@@ -3,14 +3,15 @@
 This is a UI library created on the design language of bootstrap and Microsoft fluent UI
 
 This is built on top of Bootstrap and Fluent UI React (formerly Office UI Fabric React) which is a collection of robust React-based components designed to make it simple for you to create consistent web experiences using the Fluent Design Language.
-For information about available controls, see the [Fluent UI website](https://developer.microsoft.com/en-us/fluentui) .
+For information, see the [Fluent UI website](https://developer.microsoft.com/en-us/fluentui) or [Bootstrap website](https://getbootstrap.com/) .
 
-This library has lot of controls which will make onboarding of the application easier and faster.
+This library has reusable of controls which will make onboarding of the application easier and faster.
 
-To install the library run the following command -
+## Installation
 
+The package can be installed as an npm package using the following command:
 ```
- npm install react-ui-common-controls@latest
+ npm install --save react-ui-common-controls@latest
 ```
 
 ## Controls
@@ -83,6 +84,21 @@ To install the library run the following command -
 #### 1.0.1 (2022-01-22)
 
 - Gridview - Gridview Control added
+
+
+## Code Repository
+
+https://github.com/applicationsuite/react-ui-common-controls
+
+
+## Authors and Contributors
+
+The project is being initially developed and maintained by Chinmaya Panda. 
+
+The contribution to this libray is open, so any contribution is very welcome.
+
+For contributing to this library, please reach out to me on following email -
+visit.chinmaya@gmail.com
 
 <!-- [AppWrapper](#AppWrapper)
 [ErrorBoundary](#ErrorBoundary)
