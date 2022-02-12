@@ -17,7 +17,7 @@ The package can be installed as an npm package using the following command:
 
 ## Components
 
-| Controls                                     | Date Modified |
+| Component                                    | Date Modified |
 | -------------------------------------------- | ------------- |
 | [Accordion](docs/Accordion.md)               | 2022-02-12    |
 | [AppWrapper](docs/AppWrapper.md)             | 2022-01-23    |
