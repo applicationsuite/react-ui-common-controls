@@ -46,7 +46,7 @@ https://github.com/applicationsuite/react-ui-common-controls
 The project is being initially developed and maintained by Chinmaya Kumar Panda.
 
 The contribution to this libray is open, so any contribution is very welcome.
-We welcome you to raise issues to let us know your requirements, use cases and also bug reporting.
+We welcome you to raise issues, add your new requirements or use cases, so that we will close them asap.
 
 For contributing to this library, please reach out to me on the following email -
 visit.chinmaya@gmail.com
