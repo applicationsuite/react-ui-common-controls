@@ -33,6 +33,10 @@ To install the library run the following command -
 
 ## Release Notes
 
+#### 1.1.0 (2022-02-12)
+
+- Gridview - Selection Bug Fix
+
 #### 1.0.9 (2022-02-12)
 
 - Gridview - Selection Bug Fix

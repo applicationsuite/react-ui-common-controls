@@ -52,7 +52,7 @@ export const useSelection = (
       return new Selection();
     }
     const filteredItems = props.selectFirstItemOnLoad ? getFilterData(props) : props.items;
-    let firstLoad = state.items.length !== props.items.length;
+    let firstLoad = state.items && state.items.length !== props.items.length;
     if (filteredItems && filteredItems.length) {
       return new Selection({
         onSelectionChanged: () => {
