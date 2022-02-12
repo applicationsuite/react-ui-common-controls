@@ -15,7 +15,7 @@ The package can be installed as an npm package using the following command:
  npm install --save react-ui-common-controls@latest
 ```
 
-## Controls
+## Components
 
 | Controls                                     | Date Modified |
 | -------------------------------------------- | ------------- |
