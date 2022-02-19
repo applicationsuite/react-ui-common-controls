@@ -21,6 +21,7 @@ The package can be installed as an npm package using the following command:
 | -------------------------------------------- | ------------- |
 | [Accordion](docs/Accordion.md)               | 2022-02-12    |
 | [AppWrapper](docs/AppWrapper.md)             | 2022-01-23    |
+| [AutoComplete](docs/AutoComplete.md)         | 2022-02-19    |
 | [AzureAD](docs/AzureAD.md)                   | 2022-02-09    |
 | [ErrorBoundary](docs/ErrorBoundary.md)       | 2022-01-23    |
 | [FileUpload](docs/FileUpload.md)             | 2022-01-23    |
