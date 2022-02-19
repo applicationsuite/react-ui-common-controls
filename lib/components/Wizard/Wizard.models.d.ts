@@ -60,4 +60,5 @@ export interface IWizardProps {
     stepActiveClass?: string;
     wizardLinksClass?: string;
     wizardContainerClass?: string;
+    wizardLinkTextClass?: string;
 }

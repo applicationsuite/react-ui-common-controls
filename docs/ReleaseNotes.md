@@ -1,5 +1,10 @@
 # Release Notes
 
+#### 1.2.0 (2022-02-19)
+
+- AutoComplete - New Control is added to support auto complete text box with multi-item select
+- Wizard - wizardLinkTextClass is added to pass custom styles for the wizard link text
+
 #### 1.1.1 (2022-02-12)
 
 - File re-structuring and md file updates

@@ -2,12 +2,15 @@ import React from 'react';
 import { IAccordionProps } from './Accordion.models';
 import { createUseStyles } from 'react-jss';
 import { accordionStyles } from './Accordion.styles';
-import { mergeClassNames } from '../../';
+import { mergeClassNames, useLocalization, getLocalizedString } from '../../';
+
 const useStyles = createUseStyles(accordionStyles);
 
 export const Accordion: React.FC<IAccordionProps> = (props) => {
-  const [isCollapsed, setCollpased] = React.useState(false);
   const classes = useStyles();
+  const [isCollapsed, setCollpased] = React.useState(false);
+  const localization = useLocalization();
+
   React.useEffect(() => {
     setCollpased(props.isCollapsed || false);
   }, [props.isCollapsed]);
@@ -22,7 +25,17 @@ export const Accordion: React.FC<IAccordionProps> = (props) => {
     <>
       <div
         className={mergeClassNames([classes.accordionHeader, props.accordionHeaderClass])}
-        aria-label={isCollapsed ? 'Click to expand' : 'Click to collpase'}
+        aria-label={
+          isCollapsed
+            ? getLocalizedString(localization, {
+                id: 'Core.Accordion.ClickToExpand',
+                defaultMessage: 'Click to expand'
+              })
+            : getLocalizedString(localization, {
+                id: 'Core.Accordion.ClickToCollapse',
+                defaultMessage: 'Click to collpase'
+              })
+        }
         aria-expanded={!isCollapsed}
         onClick={onToggleAccordion}
       >
