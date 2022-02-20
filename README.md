@@ -31,6 +31,7 @@ The package can be installed as an npm package using the following command:
 | [Logger](docs/Logger.md)                     | 2022-01-23    |
 | [MicroFrontEnd](docs/MicroFrontEnd.md)       | 2022-02-05    |
 | [Pagination](docs/Pagination.md)             | 2022-01-23    |
+| [PeoplePicker](docs/PeoplePicker.md)         | 2022-02-21    |
 | [ThemeProvider](docs/ThemeProvider.md)       | 2022-01-23    |
 | [Wizard](docs/Wizard.md)                     | 2022-01-23    |
 

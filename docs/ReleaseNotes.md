@@ -1,5 +1,10 @@
 # Release Notes
 
+#### 1.3.0 (2022-02-21)
+
+- PeoplePicker - New Control is added to support picking people with multi-item selection
+
+
 #### 1.2.0 (2022-02-19)
 
 - AutoComplete - New Control is added to support auto complete text box with multi-item select

@@ -3,7 +3,6 @@ import { IAutoCompleteProps, IAutoCompleteItem, AutoCompleteType } from './AutoC
 import {
   TagPicker,
   ICalloutProps,
-  ITag,
   IInputProps,
   IBasePickerSuggestionsProps,
   Label
@@ -29,7 +28,7 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     setSelectedItems(props.selectedItems || []);
   }, [props.selectedItems]);
 
-  const isItemAlreadySelected = (item: ITag, selectedItems?: ITag[]) => {
+  const isItemAlreadySelected = (item: IAutoCompleteItem, selectedItems?: IAutoCompleteItem[]) => {
     if (!selectedItems || !selectedItems.length || selectedItems.length === 0) {
       return false;
     }
@@ -41,11 +40,11 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
       noResultsFoundText: props.allowCustomItem
         ? ''
         : getLocalizedString(localization, {
-            id: 'Core.AutoComplete.NoResultsFound',
+            id: 'Core.Common.NoResultsFound',
             defaultMessage: 'No Results Found'
           }),
       loadingText: getLocalizedString(localization, {
-        id: 'Core.AutoComplete.Loading',
+        id: 'Core.Common.Loading',
         defaultMessage: 'Loading'
       }),
       resultsMaximumNumber: suggestionLimit
@@ -54,13 +53,13 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
       const isShowMoreRequired = filteredItems.length > suggestionLimit;
       suggestionProps.suggestionsHeaderText = isShowMoreRequired
         ? `${getLocalizedString(localization, {
-            id: 'Core.AutoComplete.ShowingTop',
+            id: 'Core.Common.ShowingTop',
             defaultMessage: 'Showing top'
           })}  ${suggestionLimit} ${
             props.suggestionHeaderText
               ? props.suggestionHeaderText
               : getLocalizedString(localization, {
-                  id: 'Core.AutoComplete.Results',
+                  id: 'Core.Common.Results',
                   defaultMessage: 'results'
                 })
           }`
@@ -68,14 +67,14 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
             props.suggestionHeaderText
               ? props.suggestionHeaderText
               : getLocalizedString(localization, {
-                  id: 'Core.AutoComplete.AllResults',
+                  id: 'Core.Common.AllResults',
                   defaultMessage: 'All results'
                 })
           }`;
       suggestionProps.searchForMoreText = isShowMoreRequired
         ? getLocalizedString(localization, {
-            id: 'Core.AutoComplete.ShowMore',
-            defaultMessage: 'Show more'
+            id: 'Core.Common.ShowMore',
+            defaultMessage: 'Show More'
           })
         : '';
     }
@@ -106,11 +105,11 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     return inputPropsData;
   };
 
-  const getTextFromItem = (item: ITag) => {
+  const getTextFromItem = (item: IAutoCompleteItem) => {
     return item.name;
   };
 
-  const onItemSelected = (item?: ITag) => {
+  const onItemSelected = (item?: IAutoCompleteItem) => {
     if (!item) {
       return null;
     }
@@ -120,7 +119,7 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     return item;
   };
 
-  const onSelectionChange = (items?: ITag[]) => {
+  const onSelectionChange = (items?: IAutoCompleteItem[]) => {
     setSelectedItems(items || []);
     props.onSelectionChange && props.onSelectionChange(items || []);
   };
@@ -156,7 +155,7 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     }
   };
 
-  const onGetMoreResults = (filter: string, selectedItems?: ITag[]) => {
+  const onGetMoreResults = (filter: string, selectedItems?: IAutoCompleteItem[]) => {
     if (!suggestionLimit) {
       return [];
     }
@@ -182,7 +181,10 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     let filteredItems = items || [];
     if (filterText) {
       filteredItems = filteredItems
-        .filter((item: ITag) => item.name.toLowerCase().indexOf(filterText.toLowerCase()) > -1)
+        .filter(
+          (item: IAutoCompleteItem) =>
+            item.name.toLowerCase().indexOf(filterText.toLowerCase()) > -1
+        )
         .filter((item) => !isItemAlreadySelected(item, selectedItems));
       if (allowCustomItem && filteredItems.length === 0) {
         filteredItems = [
@@ -235,7 +237,7 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
         onRenderItem={props.onRenderSelectedItem}
         componentRef={props.componentRef}
         removeButtonAriaLabel={getLocalizedString(localization, {
-          id: 'Core.AutoComplete.Remove',
+          id: 'Core.Common.Remove',
           defaultMessage: 'Remove'
         })}
         disabled={props.disabled}

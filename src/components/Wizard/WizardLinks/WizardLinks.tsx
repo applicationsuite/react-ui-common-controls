@@ -126,7 +126,7 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
                       : iconMaps[WizardStepStatus.Blocked]
                   }
                 />
-               <span
+                <span
                   className={
                     link.isCurrentItem
                       ? mergeClassNames([classes.activeStep, props.wizardLinkTextClass])
