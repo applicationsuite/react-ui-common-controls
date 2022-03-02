@@ -20,9 +20,9 @@ export interface IAutoCompleteProps {
     filterText: string,
     selectedItems?: IAutoCompleteItem[]
   ) => IAutoCompleteItem[] | Promise<IAutoCompleteItem[]>;
-
   onRenderSuggestionsItem?: (item: IAutoCompleteItem, itemProps: any) => any;
   onRenderSelectedItem?: (selection: IAutoCompleteSelection) => any;
+  loadSuggestionsOnSearch?: (filterText: string) => void;
   disabled?: boolean;
   componentRef?: any;
   label?: string;

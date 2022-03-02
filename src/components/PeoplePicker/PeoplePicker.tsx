@@ -9,7 +9,12 @@ import {
   IPersonaProps
 } from '@fluentui/react';
 import { createUseStyles } from 'react-jss';
-import { mergeClassNames, useLocalization, getLocalizedString } from '../../';
+import {
+  mergeClassNames,
+  COMMON_LOCALIZATION_STRINGS,
+  useLocalization,
+  localizedString
+} from '../../';
 import { peoplePickerStyles } from './PeoplePicker.styles';
 
 const useStyles = createUseStyles(peoplePickerStyles);
@@ -38,52 +43,40 @@ export const PeoplePicker: React.FC<IPeoplePickerProps> = (props) => {
 
   const getPickerSuggestionProps = (inputProps: IPeoplePickerProps) => {
     const suggestionProps: IBasePickerSuggestionsProps = {
-      noResultsFoundText: getLocalizedString(localization, {
-        id: 'Core.Common.NoResultsFound',
-        defaultMessage: 'No Results Found'
-      }),
-      loadingText: getLocalizedString(localization, {
-        id: 'Core.Common.Loading',
-        defaultMessage: 'Loading'
-      }),
+      noResultsFoundText: localizedString(
+        COMMON_LOCALIZATION_STRINGS.NO_RESULTS_FOUND,
+        localization
+      ),
+      loadingText: localizedString(COMMON_LOCALIZATION_STRINGS.LOADING, localization),
       resultsMaximumNumber: suggestionLimit,
-      mostRecentlyUsedHeaderText: getLocalizedString(localization, {
-        id: 'Core.Common.SuggestedResults',
-        defaultMessage: 'Suggested results'
-      }),
-      suggestionsContainerAriaLabel: getLocalizedString(localization, {
-        id: 'Core.Common.SuggestedResults',
-        defaultMessage: 'Suggested results'
-      }),
+      mostRecentlyUsedHeaderText: localizedString(
+        COMMON_LOCALIZATION_STRINGS.SUGGESTED_RESULTS,
+        localization
+      ),
+      suggestionsContainerAriaLabel: localizedString(
+        COMMON_LOCALIZATION_STRINGS.SUGGESTED_RESULTS,
+        localization
+      ),
       showRemoveButtons: inputProps.isRemoveSuggestionAllowed
     };
     if (props.type === PeoplePickerType.InMemory && suggestionLimit) {
       const isShowMoreRequired = filteredItems.length > suggestionLimit;
       suggestionProps.suggestionsHeaderText = isShowMoreRequired
-        ? `${getLocalizedString(localization, {
-            id: 'Core.Common.ShowingTop',
-            defaultMessage: 'Showing top'
-          })}  ${suggestionLimit} ${
+        ? `${localizedString(
+            COMMON_LOCALIZATION_STRINGS.SHOWING_TOP,
+            localization
+          )}  ${suggestionLimit} ${
             props.suggestionHeaderText
               ? props.suggestionHeaderText
-              : getLocalizedString(localization, {
-                  id: 'Core.Common.Results',
-                  defaultMessage: 'results'
-                })
+              : localizedString(COMMON_LOCALIZATION_STRINGS.RESULTS, localization)
           }`
         : `${
             props.suggestionHeaderText
               ? props.suggestionHeaderText
-              : getLocalizedString(localization, {
-                  id: 'Core.Common.AllResults',
-                  defaultMessage: 'All results'
-                })
+              : localizedString(COMMON_LOCALIZATION_STRINGS.ALL_RESULTS, localization)
           }`;
       suggestionProps.searchForMoreText = isShowMoreRequired
-        ? getLocalizedString(localization, {
-            id: 'Core.Common.ShowMore',
-            defaultMessage: 'Show More'
-          })
+        ? localizedString(COMMON_LOCALIZATION_STRINGS.SHOW_MORE, localization)
         : '';
     }
     return suggestionProps;
@@ -268,10 +261,7 @@ export const PeoplePicker: React.FC<IPeoplePickerProps> = (props) => {
         removeButtonAriaLabel={
           props.removeButtonAriaLabel
             ? props.removeButtonAriaLabel
-            : getLocalizedString(localization, {
-                id: 'Core.Common.Remove',
-                defaultMessage: 'Remove'
-              })
+            : localizedString(COMMON_LOCALIZATION_STRINGS.REMOVE, localization)
         }
         className={
           props.errorMessage

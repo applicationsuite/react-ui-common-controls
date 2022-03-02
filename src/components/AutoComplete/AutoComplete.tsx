@@ -3,12 +3,19 @@ import { IAutoCompleteProps, IAutoCompleteItem, AutoCompleteType } from './AutoC
 import {
   TagPicker,
   ICalloutProps,
+  Icon,
   IInputProps,
   IBasePickerSuggestionsProps,
-  Label
+  Label,
+  Stack
 } from '@fluentui/react';
 import { createUseStyles } from 'react-jss';
-import { mergeClassNames, useLocalization, getLocalizedString } from '../../';
+import {
+  mergeClassNames,
+  COMMON_LOCALIZATION_STRINGS,
+  useLocalization,
+  localizedString
+} from '../../';
 import { autoCompleteStyles } from './AutoComplete.styles';
 
 const useStyles = createUseStyles(autoCompleteStyles);
@@ -17,6 +24,7 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
   const [filteredItems, setFilteredItems] = React.useState<IAutoCompleteItem[]>([]);
   const [selectedItems, setSelectedItems] = React.useState<IAutoCompleteItem[]>();
   const [suggestionLimit, setSuggestionLimit] = React.useState(props.suggestionsLimit);
+  const [searchText, setSearchText] = React.useState('');
   const classes = useStyles();
   const localization = useLocalization();
 
@@ -39,43 +47,28 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     const suggestionProps: IBasePickerSuggestionsProps = {
       noResultsFoundText: props.allowCustomItem
         ? ''
-        : getLocalizedString(localization, {
-            id: 'Core.Common.NoResultsFound',
-            defaultMessage: 'No Results Found'
-          }),
-      loadingText: getLocalizedString(localization, {
-        id: 'Core.Common.Loading',
-        defaultMessage: 'Loading'
-      }),
+        : localizedString(COMMON_LOCALIZATION_STRINGS.NO_RESULTS_FOUND, localization),
+      loadingText: localizedString(COMMON_LOCALIZATION_STRINGS.LOADING, localization),
       resultsMaximumNumber: suggestionLimit
     };
     if (props.type === AutoCompleteType.InMemory && suggestionLimit) {
       const isShowMoreRequired = filteredItems.length > suggestionLimit;
       suggestionProps.suggestionsHeaderText = isShowMoreRequired
-        ? `${getLocalizedString(localization, {
-            id: 'Core.Common.ShowingTop',
-            defaultMessage: 'Showing top'
-          })}  ${suggestionLimit} ${
+        ? `${localizedString(
+            COMMON_LOCALIZATION_STRINGS.SHOWING_TOP,
+            localization
+          )}  ${suggestionLimit} ${
             props.suggestionHeaderText
               ? props.suggestionHeaderText
-              : getLocalizedString(localization, {
-                  id: 'Core.Common.Results',
-                  defaultMessage: 'results'
-                })
+              : localizedString(COMMON_LOCALIZATION_STRINGS.RESULTS, localization)
           }`
         : `${
             props.suggestionHeaderText
               ? props.suggestionHeaderText
-              : getLocalizedString(localization, {
-                  id: 'Core.Common.AllResults',
-                  defaultMessage: 'All results'
-                })
+              : localizedString(COMMON_LOCALIZATION_STRINGS.ALL_RESULTS, localization)
           }`;
       suggestionProps.searchForMoreText = isShowMoreRequired
-        ? getLocalizedString(localization, {
-            id: 'Core.Common.ShowMore',
-            defaultMessage: 'Show More'
-          })
+        ? localizedString(COMMON_LOCALIZATION_STRINGS.SHOW_MORE, localization)
         : '';
     }
     return suggestionProps;
@@ -206,6 +199,15 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
     return filteredItems;
   };
 
+  const onInputChange = (searchText: string) => {
+    setSearchText(searchText);
+    return searchText;
+  };
+
+  const onSearch = () => {
+    props.loadSuggestionsOnSearch && props.loadSuggestionsOnSearch(searchText);
+  };
+
   return (
     <>
       {props.label && (
@@ -218,35 +220,39 @@ export const AutoComplete: React.FC<IAutoCompleteProps> = (props) => {
           )}
         </Label>
       )}
-
-      <TagPicker
-        inputProps={getInputProps(props)}
-        pickerCalloutProps={getPickerCalloutProps(props)}
-        pickerSuggestionsProps={getPickerSuggestionProps(props)}
-        onResolveSuggestions={onResolveSuggestions}
-        onEmptyResolveSuggestions={
-          props.showSuggestionsOnFocus ? onEmptyResolveSuggestions : undefined
-        }
-        selectedItems={selectedItems}
-        getTextFromItem={getTextFromItem}
-        itemLimit={props.selectionLimit ? props.selectionLimit : 1}
-        onItemSelected={onItemSelected}
-        onChange={onSelectionChange}
-        onGetMoreResults={onGetMoreResults}
-        onRenderSuggestionsItem={props.onRenderSuggestionsItem}
-        onRenderItem={props.onRenderSelectedItem}
-        componentRef={props.componentRef}
-        removeButtonAriaLabel={getLocalizedString(localization, {
-          id: 'Core.Common.Remove',
-          defaultMessage: 'Remove'
-        })}
-        disabled={props.disabled}
-        className={
-          props.errorMessage
-            ? mergeClassNames([classes.autoCompleteError, props.className])
-            : props.className
-        }
-      />
+      <Stack horizontal>
+        <TagPicker
+          inputProps={getInputProps(props)}
+          pickerCalloutProps={getPickerCalloutProps(props)}
+          pickerSuggestionsProps={getPickerSuggestionProps(props)}
+          onResolveSuggestions={onResolveSuggestions}
+          onEmptyResolveSuggestions={
+            props.showSuggestionsOnFocus && !props.loadSuggestionsOnSearch
+              ? onEmptyResolveSuggestions
+              : undefined
+          }
+          selectedItems={selectedItems}
+          getTextFromItem={getTextFromItem}
+          itemLimit={props.selectionLimit ? props.selectionLimit : 1}
+          onItemSelected={onItemSelected}
+          onChange={onSelectionChange}
+          onGetMoreResults={onGetMoreResults}
+          onRenderSuggestionsItem={props.onRenderSuggestionsItem}
+          onRenderItem={props.onRenderSelectedItem}
+          componentRef={props.componentRef}
+          removeButtonAriaLabel={localizedString(COMMON_LOCALIZATION_STRINGS.REMOVE, localization)}
+          disabled={props.disabled}
+          className={
+            props.errorMessage
+              ? mergeClassNames([classes.autoCompleteError, props.className])
+              : mergeClassNames([classes.defaultAutoComplete, props.className])
+          }
+          onInputChange={onInputChange}
+        />
+        {props.loadSuggestionsOnSearch && (
+          <Icon iconName="Search" className={classes.searchIcon} onClick={onSearch} tabIndex={0} />
+        )}
+      </Stack>
 
       {props.errorMessage && (
         <div role="alert" aria-live="assertive">

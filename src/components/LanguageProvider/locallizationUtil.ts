@@ -2,19 +2,21 @@ import { createIntl, useIntl, IntlShape } from 'react-intl';
 import { LocalizationData, ILocalizationString } from './LanguageProvider.models';
 
 export const useLocalization: any = (options?: any) => {
-  const intl = useIntl();
-  return intl;
+  try {
+    const intl = useIntl();
+    return intl;
+  } catch (error) {
+    return undefined;
+  }
 };
 
-export const getLocalizedString = (
-  localizationInstance: any,
-  localizationStringData: ILocalizationString
-) =>
-  localizationInstance.formatMessage && localizationInstance.formatMessage(localizationStringData);
-
-export const useLocalizedString = (localizationStringData: ILocalizationString) => {
-  const intl = useIntl();
-  return intl.formatMessage(localizationStringData);
+export const localizedString = (
+  localizationStringData: ILocalizationString,
+  localizationInstance?: any
+) => {
+  return localizationInstance
+    ? localizationInstance.formatMessage(localizationStringData)
+    : localizationStringData.defaultMessage;
 };
 
 export const getIntl = (language?: string, localizationData?: any[]) => {
