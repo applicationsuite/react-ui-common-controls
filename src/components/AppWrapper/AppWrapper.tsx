@@ -1,7 +1,9 @@
 import React from 'react';
 import { IAppWrapperProps, IGlobalContext } from './AppWrapper.models';
 import { useInit } from './AppWrapper.hooks';
-import { LanguageProvider, ErrorBoundary, ThemeProvider } from '..';
+import { LanguageProvider } from '../LanguageProvider';
+import { ErrorBoundary } from '../ErrorBoundary';
+import { ThemeProvider } from '../ThemeProvider';
 import { Logger } from '../Logger';
 import { AppDataContext } from './AppWrapper.context';
 

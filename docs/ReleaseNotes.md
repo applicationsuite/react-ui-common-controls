@@ -2,6 +2,10 @@
 
 #### 1.3.0 (2022-02-21)
 
+- LanguageProvider - Changes to support localization
+
+#### 1.3.0 (2022-02-21)
+
 - PeoplePicker - New Control is added to support picking people with multi-item selection
 
 

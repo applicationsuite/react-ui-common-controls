@@ -10,12 +10,9 @@ import {
   Stack
 } from '@fluentui/react';
 import { createUseStyles } from 'react-jss';
-import {
-  mergeClassNames,
-  COMMON_LOCALIZATION_STRINGS,
-  useLocalization,
-  localizedString
-} from '../../';
+import { useLocalization, localizedString } from '../LanguageProvider';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
+import { COMMON_LOCALIZATION_STRINGS } from '../../constants/CommonConstants';
 import { autoCompleteStyles } from './AutoComplete.styles';
 
 const useStyles = createUseStyles(autoCompleteStyles);

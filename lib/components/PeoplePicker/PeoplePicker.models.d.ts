@@ -28,3 +28,4 @@ export interface IPeoplePickerProps extends IBasePickerProps<IPersonaProps> {
     errorTextClassName?: string;
     suggestionsCalloutClassName?: string;
 }
+export declare const PEOPLE_PICKER_LOCALIZATION_STRINGS: {};

@@ -2,7 +2,8 @@ import React from 'react';
 import { IAccordionProps, ACCORDION_LOCALIZATION_STRINGS } from './Accordion.models';
 import { createUseStyles } from 'react-jss';
 import { accordionStyles } from './Accordion.styles';
-import { mergeClassNames, useLocalization, localizedString } from '../..';
+import { useLocalization, localizedString } from '../LanguageProvider';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
 
 const useStyles = createUseStyles(accordionStyles);
 

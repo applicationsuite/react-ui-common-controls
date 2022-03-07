@@ -9,3 +9,13 @@ export interface IAccordionProps {
     onRenderHeader?: () => any;
     onAccordionToggle?: (isCollapsed: boolean) => void;
 }
+export declare const ACCORDION_LOCALIZATION_STRINGS: {
+    Accordion_ClickToExpand: {
+        id: string;
+        defaultMessage: string;
+    };
+    Accordion_ClickToCollapse: {
+        id: string;
+        defaultMessage: string;
+    };
+};

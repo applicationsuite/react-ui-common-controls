@@ -9,12 +9,9 @@ import {
   IPersonaProps
 } from '@fluentui/react';
 import { createUseStyles } from 'react-jss';
-import {
-  mergeClassNames,
-  COMMON_LOCALIZATION_STRINGS,
-  useLocalization,
-  localizedString
-} from '../../';
+import { useLocalization, localizedString } from '../LanguageProvider';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
+import { COMMON_LOCALIZATION_STRINGS } from '../../constants/CommonConstants';
 import { peoplePickerStyles } from './PeoplePicker.styles';
 
 const useStyles = createUseStyles(peoplePickerStyles);

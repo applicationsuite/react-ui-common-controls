@@ -24,7 +24,7 @@ export declare const SORT_TYPE: {
 };
 export declare const MONTH_NAMES_FULL: string[];
 export declare const MONTH_NAMES_SHORT: string[];
-export declare const COMMON_LOCALIZATION_CONSTANTS: {
+export declare const COMMON_LOCALIZATION_STRINGS: {
     SAVE: {
         id: string;
         defaultMessage: string;
@@ -254,6 +254,34 @@ export declare const COMMON_LOCALIZATION_CONSTANTS: {
         defaultMessage: string;
     };
     DECEMBER: {
+        id: string;
+        defaultMessage: string;
+    };
+    NO_RESULTS_FOUND: {
+        id: string;
+        defaultMessage: string;
+    };
+    LOADING: {
+        id: string;
+        defaultMessage: string;
+    };
+    SHOWING_TOP: {
+        id: string;
+        defaultMessage: string;
+    };
+    RESULTS: {
+        id: string;
+        defaultMessage: string;
+    };
+    ALL_RESULTS: {
+        id: string;
+        defaultMessage: string;
+    };
+    SHOW_MORE: {
+        id: string;
+        defaultMessage: string;
+    };
+    SUGGESTED_RESULTS: {
         id: string;
         defaultMessage: string;
     };
