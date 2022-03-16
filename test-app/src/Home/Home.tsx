@@ -1,6 +1,6 @@
 import React from 'react';
 import './Home.css';
-import { GridViewExample } from '../GridView/GridView.example';
+import { GridViewExample } from 'react-ui-common-controls/lib/components/GridView/GridView.example';
 
 export const Home = () => {
   const [component, setComponent] = React.useState('');

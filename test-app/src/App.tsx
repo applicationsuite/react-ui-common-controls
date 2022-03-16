@@ -3,7 +3,6 @@ import './App.css';
 import { Header } from './layout/Header/Header';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './Home';
-import { AzureAD } from './AzureAD';
 import { useFile } from 'react-ui-common-controls';
 
 function App() {
@@ -13,15 +12,13 @@ function App() {
   }
   return (
     <div className="container">
-      <AzureAD {...appConfig.msalConfig}>
-        <Router>
-          <Header />
-          <Routes>
-            <Route path="/Home" element={<Home />} />
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </Router>
-      </AzureAD>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/Home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
