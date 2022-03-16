@@ -1,7 +1,6 @@
 import React from 'react';
 import { FileUpload, FILE_EXTENSIONS, IFileInfo } from '.';
 import { parseExcelFileToJSON } from './fileParsers';
-import { PrimaryButton } from '@fluentui/react';
 
 export const FileUploadExample = () => {
   const [files, setFiles] = React.useState<IFileInfo[]>();

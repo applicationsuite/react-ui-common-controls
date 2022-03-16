@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
-import { SearchBox, IconButton } from '@fluentui/react';
+import { SearchBox } from '@fluentui/react/lib/SearchBox';
+import { IconButton } from '@fluentui/react/lib/Button';
 import { quickSearchStyles } from './QuickSearch.styles';
 
 const useStyles = createUseStyles(quickSearchStyles);

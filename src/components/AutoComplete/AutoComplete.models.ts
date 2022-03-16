@@ -1,4 +1,4 @@
-import { ITag, IPickerItemProps } from '@fluentui/react';
+import { ITag, IPickerItemProps } from '@fluentui/react/lib/Pickers';
 
 export enum AutoCompleteType {
   InMemory = 0,

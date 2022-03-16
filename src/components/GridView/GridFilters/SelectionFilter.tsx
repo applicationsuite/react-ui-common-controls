@@ -1,6 +1,7 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { TextField, Checkbox } from '@fluentui/react';
+import { Checkbox } from '@fluentui/react/lib/Checkbox';
+import { TextField } from '@fluentui/react/lib/TextField';
 import { IGridFilter, IGridFilterItem } from '../GridView.models';
 import { FILTER_ITEM_TEXT_FIELD } from '../GridView.models';
 import { GridFilterLabel } from './GridFilterLabel';

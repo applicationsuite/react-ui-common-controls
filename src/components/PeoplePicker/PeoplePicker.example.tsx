@@ -1,6 +1,6 @@
 import React from 'react';
 import { PeoplePicker, PeoplePickerType } from '.';
-import { IPersonaProps } from '@fluentui/react';
+import { IPersonaProps } from '@fluentui/react/lib/Persona';
 
 export const PeoplePickerExample = () => {
   const getItems = () => {

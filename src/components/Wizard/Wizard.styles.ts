@@ -7,6 +7,11 @@ export const wizardStyles = (theme: string) => ({
     maxWidth: '20%',
     overflow: 'auto'
   },
+  wizardLinksCollapsed: {
+    width: '30px',
+    maxWidth: '30px',
+    overflow: 'auto'
+  },
   wizardContainer: {
     marginLeft: '0px !important',
     width: '80%',
@@ -21,5 +26,18 @@ export const wizardStyles = (theme: string) => ({
       background: 'grey',
       height: 'calc(100vh)'
     }
+  },
+  stepCollapseExpandSection: {
+    position: 'fixed',
+    bottom: '0px',
+    width: '19.5%',
+    textAlign: 'right'
+  },
+
+  stepCollapseExpandSectionCollapsed: {
+    position: 'fixed',
+    bottom: '0px',
+    textAlign: 'right',
+    left: '5px'
   }
 });

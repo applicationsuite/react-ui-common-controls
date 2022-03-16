@@ -8,9 +8,10 @@ import {
   FILE_UPLOAD_CONSTANTS,
   FileUploadState
 } from '..';
-import { mergeClassNames } from '../../../';
+import { mergeClassNames } from '../../../utilities/mergeClassNames';
 import { fileUploaderStyles } from './FileUploader.styles';
-import { Icon, Link } from '@fluentui/react';
+import { Icon } from '@fluentui/react/lib/Icon';
+import { Link } from '@fluentui/react/lib/Link';
 import { FileUploadList } from './FileUploadList';
 import { getUpdatedFiles, loadFiles } from '../fileUploadUtils';
 

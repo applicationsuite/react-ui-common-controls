@@ -1,8 +1,19 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { INavLinkGroup, INavLink, Stack, Icon } from '@fluentui/react';
-import { IWizardProps, IWizardStep, WizardType, WizardStepStatus } from '../Wizard.models';
+import { Stack } from '@fluentui/react/lib/Stack';
+import { Icon } from '@fluentui/react/lib/Icon';
+import {
+  IWizardProps,
+  IWizardStep,
+  WizardType,
+  WizardStepStatus,
+  IWizardStepLinkGroup,
+  IWizardStepLink,
+  WIZARD_STEP_STATUS_STRINGS
+} from '../Wizard.models';
 import { wizardLinksStyles } from './WizardLinks.styles';
+import { Accordion } from '../../Accordion';
+import { mergeClassNames } from '../../../utilities/mergeClassNames';
 
 const useStyles = createUseStyles(wizardLinksStyles);
 
@@ -15,39 +26,8 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
     [WizardStepStatus.Started]: 'SkypeCircleClock',
     [WizardStepStatus.Completed]: 'SkypeCircleCheck',
     [WizardStepStatus.Error]: 'StatusErrorFull',
-    [WizardStepStatus.Blocked]: 'BlockedSolid'
-  };
-
-  const getWizardLinks = (wizardSteps: IWizardStep[] = []) => {
-    const steps = wizardSteps;
-    const wizardLinks: INavLinkGroup[] = [];
-    steps.forEach((step) => {
-      const navLink: INavLink = {
-        key: step.id.toString(),
-        name: step.name,
-        icon: step.status ? iconMaps[step.status] : iconMaps[WizardStepStatus.NotStarted],
-        url: '',
-        disabled: step.disabled,
-        status: step.status,
-        isCurrentItem: step.id.toString() === selectedLinkKey,
-        stepData: step
-      };
-      const parentGroup = step.groupName
-        ? wizardLinks.find((grp) => grp.name === step.groupName)
-        : wizardLinks[0];
-      if (parentGroup) {
-        parentGroup.links.push(navLink);
-      } else {
-        const linkGroup: INavLinkGroup = {
-          links: [],
-          name: step.groupName
-        };
-        linkGroup.links.push(navLink);
-
-        wizardLinks.push(linkGroup);
-      }
-    });
-    return wizardLinks;
+    [WizardStepStatus.Blocked]: 'BlockedSolid',
+    [WizardStepStatus.Disabled]: 'SkypeCircleCheck'
   };
 
   const onStepClick = (item: any) => {
@@ -90,108 +70,151 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
     );
   };
 
-  const mergeClassNames = (classNames: (string | undefined)[]) =>
-    classNames.filter((className) => !!className).join(' ');
+  const mapWizardStepData = (wizardSteps: IWizardStep[] = []) => {
+    const steps = wizardSteps;
+    const wizardLinks: IWizardStepLinkGroup[] = [];
+    steps.forEach((step) => {
+      const navLink: IWizardStepLink = {
+        key: step.id.toString(),
+        name: step.name,
+        icon: step.status ? iconMaps[step.status] : iconMaps[WizardStepStatus.NotStarted],
+        disabled: step.disabled,
+        status: step.status!,
+        isCurrentItem: step.id.toString() === selectedLinkKey,
+        stepData: step
+      };
+      const parentGroup = step.groupName
+        ? wizardLinks.find((grp) => grp.name === step.groupName)
+        : wizardLinks[0];
+      if (parentGroup) {
+        parentGroup.links.push(navLink);
+      } else {
+        const linkGroup: IWizardStepLinkGroup = {
+          links: [],
+          name: step.groupName
+        };
+        linkGroup.links.push(navLink);
 
-  const getWizard = (links: INavLink[], type: WizardType) => {
-    const isHorizental = type === WizardType.Horizontal;
+        wizardLinks.push(linkGroup);
+      }
+    });
+    return wizardLinks;
+  };
 
+  const getWizardLinks = (wizardType: WizardType, steps: IWizardStep[]) => {
+    const wizardLinks = mapWizardStepData(steps);
     return (
-      <Stack horizontal={isHorizental} className={classes.mainClass}>
-        {links.map((link, index) => (
-          <>
-            <Stack
-              onClick={() => {
-                !link.disabled && onStepClick(link);
-              }}
-              horizontal={isHorizental}
-              className={
-                link.isCurrentItem && !isHorizental
-                  ? props.stepActiveClass
-                    ? mergeClassNames([classes.stepClassActive, props.stepActiveClass])
-                    : classes.stepClassActive
-                  : props.stepClass
-                  ? mergeClassNames([classes.stepClass, props.stepClass])
-                  : classes.stepClass
-              }
-            >
-              <button type="button" disabled={link.disabled}>
-                <Icon
-                  className={link.isCurrentItem ? 'active' : getClassName(link.status)}
-                  iconName={
-                    link.icon
-                      ? link.isCurrentItem
-                        ? iconMaps[WizardStepStatus.Started]
-                        : link.icon
-                      : iconMaps[WizardStepStatus.Blocked]
-                  }
-                />
-                <span
-                  className={
-                    link.isCurrentItem
-                      ? mergeClassNames([classes.activeStep, props.wizardLinkTextClass])
-                      : mergeClassNames([classes.stepText, props.wizardLinkTextClass])
-                  }
-                >
-                  {link.name}
-                </span>
-              </button>
-              {index !== links.length - 1 && (
-                <>
-                  {isHorizental ? (
-                    <div
-                      className={
-                        links[index + 1].status === WizardStepStatus.Completed &&
-                        link?.status === WizardStepStatus.Completed
-                          ? classes.connectorCompletedHorizental
-                          : link.status === WizardStepStatus.Completed
-                          ? classes.connectorSolidHorizental
-                          : classes.connectorDashedHorizental
-                      }
-                    />
-                  ) : (
-                    <div>
-                      <div
-                        className={
-                          links[index + 1].status === WizardStepStatus.Completed &&
-                          link?.status === WizardStepStatus.Completed
-                            ? classes.connectorCompleted
-                            : link.status === WizardStepStatus.Completed
-                            ? classes.connectorSolid
-                            : classes.connectorDashed
-                        }
-                      />
-                      {getStepSummaryComponent(link.stepData)}
-                    </div>
-                  )}
-                </>
+      wizardLinks &&
+      wizardLinks.map((group) => (
+        <Stack
+          key={group.name}
+          horizontal={wizardType === WizardType.Horizontal}
+          className={classes.mainClass}
+        >
+          {!props.defaultStepLinksCollapse && wizardType === WizardType.Vertical && group.name ? (
+            <Accordion headerText={group.name} accordionHeaderClass={classes.accordionHeader}>
+              {group.links.map((link, index) =>
+                getWizardLink(wizardType, link, group.links, index)
               )}
-            </Stack>
-          </>
-        ))}
-      </Stack>
+            </Accordion>
+          ) : (
+            group.links.map((link, index) => getWizardLink(wizardType, link, group.links, index))
+          )}
+        </Stack>
+      ))
     );
   };
 
-  const wizardLinks = getWizardLinks(props.steps);
+  const getLinkStatus = (link: IWizardStepLink) => {
+    if (link.isCurrentItem) {
+      return WizardStepStatus.InProgress;
+    } else if (link.disabled) {
+      return WizardStepStatus.Disabled;
+    } else if (link.status) {
+      return link.status;
+    } else {
+      return WizardStepStatus.NotStarted;
+    }
+  };
 
-  return (
-    <Stack>
-      {wizardLinks &&
-        wizardLinks.map((group) => (
-          <>
-            {' '}
-            {group.name && props.type !== WizardType.Horizontal ? (
-              <>
-                <span className={classes.accordionHeader}>{group?.name ? group.name : ''}</span>
-                {getWizard(group.links, props.type)}
-              </>
-            ) : (
-              <>{getWizard(group.links, props.type)}</>
+  const getWizardLink = (
+    wizardType: WizardType,
+    link: IWizardStepLink,
+    links: IWizardStepLink[],
+    index: number
+  ) => {
+    return (
+      <>
+        <Stack
+          aria-label={`${link.name}: ${WIZARD_STEP_STATUS_STRINGS[getLinkStatus(link)]}`}
+          title={`${link.name}: ${WIZARD_STEP_STATUS_STRINGS[getLinkStatus(link)]}`}
+          key={link.key}
+          onClick={() => {
+            !link.disabled && onStepClick(link);
+          }}
+          className={
+            link.isCurrentItem
+              ? mergeClassNames([
+                  classes.stepClassActive,
+                  props.defaultStepLinksCollapse ? classes.collapseLink : '',
+                  props.stepActiveClass
+                ])
+              : mergeClassNames([
+                  classes.stepClass,
+                  props.defaultStepLinksCollapse ? classes.collapseLink : '',
+                  props.stepClass
+                ])
+          }
+        >
+          <button type="button" disabled={link.disabled}>
+            <Icon
+              className={link.isCurrentItem ? 'active' : getClassName(link.status)}
+              iconName={
+                link.icon
+                  ? link.isCurrentItem
+                    ? iconMaps[WizardStepStatus.Started]
+                    : link.icon
+                  : iconMaps[WizardStepStatus.Blocked]
+              }
+            />
+            {!props.defaultStepLinksCollapse && (
+              <span
+                className={
+                  link.isCurrentItem
+                    ? mergeClassNames([classes.activeStep, props.wizardLinkTextClass])
+                    : mergeClassNames([classes.stepText, props.wizardLinkTextClass])
+                }
+              >
+                {link.name}
+              </span>
             )}
-            {/* <SectionSeparator /> */}
-          </>
-        ))}
-    </Stack>
-  );
+          </button>
+          {!props.defaultStepLinksCollapse &&
+            wizardType === WizardType.Vertical &&
+            index !== links.length - 1 && (
+              <>
+                <div
+                  className={
+                    links[index + 1].status === WizardStepStatus.Completed &&
+                    link?.status === WizardStepStatus.Completed
+                      ? classes.connectorCompleted
+                      : link.status === WizardStepStatus.Completed
+                      ? classes.connectorSolid
+                      : classes.connectorDashed
+                  }
+                />
+                {getStepSummaryComponent(link.stepData)}
+              </>
+            )}
+        </Stack>
+        {wizardType === WizardType.Horizontal && index !== links.length - 1 && (
+          <Stack className={classes.horizontalSeparator}>
+            <Icon iconName="ChevronRight" />
+          </Stack>
+        )}
+      </>
+    );
+  };
+
+  return <Stack>{getWizardLinks(props.type, props.steps)}</Stack>;
 };

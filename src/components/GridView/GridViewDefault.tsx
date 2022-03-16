@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { DetailsList, DetailsListLayoutMode, SelectionMode, Checkbox } from '@fluentui/react';
-import { mergeClassNames } from '../../';
+import React from 'react';
+import { DetailsList, DetailsListLayoutMode, SelectionMode } from '@fluentui/react/lib/DetailsList';
+import { Checkbox } from '@fluentui/react/lib/Checkbox';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
 import { IGridColumn, IGridViewParams } from './GridView.models';
 import { createUseStyles } from 'react-jss';
 import { gridViewStyles } from './GridView.styles';

@@ -74,6 +74,11 @@ export const wizardLinksStyles = (theme: string) => ({
     margin: '0px 0px 5px 0px'
   },
 
+  collapseLink: {
+    padding: '0px',
+    paddingTop: '4px'
+  },
+
   connectorDashed: {
     borderLeft: '1px dashed #999999',
     position: 'absolute',
@@ -126,5 +131,9 @@ export const wizardLinksStyles = (theme: string) => ({
   stepDetails: {
     marginLeft: '23px',
     marginBottom: '5px'
+  },
+  horizontalSeparator: {
+    padding: '5px',
+    paddingTop: '20px'
   }
 });

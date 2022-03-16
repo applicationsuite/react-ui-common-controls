@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useMemo } from 'react';
-import { ColumnActionsMode, IObjectWithKey, Selection } from '@fluentui/react';
+import { ColumnActionsMode, Selection } from '@fluentui/react/lib/DetailsList';
 import { gridViewReducer } from './GridView.reducers';
 import { GRIDVIEW_ACTIONS, IGridViewActions } from './GridView.actions';
 import {
@@ -16,13 +16,8 @@ import {
   FilterOperation,
   FILTER_ITEM_TEXT_FIELD
 } from './GridView.models';
-import {
-  applyPaging,
-  applySorting as applySortingDefault,
-  DEFAULT_PAGE_SIZE,
-  SORT_TYPE
-} from '../../';
-
+import { applyPaging, applySorting as applySortingDefault } from '../../utilities';
+import { DEFAULT_PAGE_SIZE, SORT_TYPE } from '../../constants';
 import {
   applyFilterTextByField,
   getFieldFilterItems,
@@ -53,16 +48,13 @@ export const useSelection = (
     }
     const filteredItems = props.selectFirstItemOnLoad ? getFilterData(props) : props.items;
     let firstLoad = state.items && state.items.length !== props.items.length;
-    if (filteredItems && filteredItems.length) {
-      return new Selection({
-        onSelectionChanged: () => {
-          !firstLoad && handleSelectionChange(selection);
-          firstLoad = false;
-        },
-        items: filteredItems
-      });
-    }
-    return new Selection();
+    return new Selection({
+      onSelectionChanged: () => {
+        !firstLoad && handleSelectionChange(selection);
+        firstLoad = false;
+      },
+      items: filteredItems
+    });
   }, [props.items]);
   return selection;
 };
@@ -83,7 +75,8 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         totalRecords:
           props.totalRecords || props.totalRecords === 0 ? props.totalRecords : props.items.length,
         columns: updateColumns(
-          state.columns ? state.columns : props.columns,
+          props.columns,
+          state.columns || [],
           sortingOptions!,
           callbacks.onColumnClick,
           props.removeSorting || props.allowMultiLevelSorting
@@ -94,7 +87,8 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         statusMessages: state.statusMessages ? state.statusMessages : [],
         filtersToApply: [],
         availableFilters: [],
-        showFilters: props.showFiltersOnLoad
+        showFilters: props.showFiltersOnLoad,
+        hidePaging: props.hidePaging
       };
 
       let filteredItems = [...props.items];
@@ -464,6 +458,110 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         type: GRIDVIEW_ACTIONS.SET_DATA,
         data: data
       });
+    },
+    addRecord: () => {
+      let items = state.filteredItems;
+      let newItem: any = {
+        [state.itemUniqueField!]: new Date().getUTCMilliseconds().toString(),
+        isDirty: true,
+        isNewItem: true,
+        updatedData: {}
+      };
+      newItem.updatedData[state.itemUniqueField!] = newItem[state.itemUniqueField!];
+      items = items || [];
+      items.push(newItem);
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_DATA,
+        data: { isUpdateMode: true }
+      });
+    },
+    editRecords: (itemsToEdit: any[]) => {
+      let items = state.filteredItems || [];
+      itemsToEdit.forEach((item) => {
+        let index = items.findIndex(
+          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
+        );
+        if (index >= 0) {
+          items[index].updatedData = { ...items[index] };
+          items[index].isDirty = true;
+        }
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
+    },
+    deleteRecords: (itemsToDelete: any[]) => {
+      let items = state.filteredItems || [];
+      items = items.filter(
+        (item) =>
+          !itemsToDelete.some((i) => i[state.itemUniqueField!] === item[state.itemUniqueField!])
+      );
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_DATA,
+        data: { isUpdateMode: true }
+      });
+      return true;
+    },
+    changeRecords: (itemsToUpdate: any[]) => {
+      let items = state.filteredItems || [];
+      itemsToUpdate.forEach((item) => {
+        let index = items.findIndex(
+          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
+        );
+        if (index >= 0) {
+          items[index].updatedData = item.updatedData;
+        }
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
+    },
+    saveRecords: (itemsToAdd: any[]) => {
+      let items = state.filteredItems || [];
+      itemsToAdd.forEach((item) => {
+        let index = items.findIndex(
+          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
+        );
+        if (index >= 0) {
+          items[index] = { ...item.updatedData };
+          items[index].isDirty = false;
+        }
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
+      return true;
+    },
+    cancelRecords: (itemsToCancel: any[]) => {
+      let items = state.filteredItems || [];
+
+      itemsToCancel.forEach((item) => {
+        let index = items.findIndex(
+          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
+        );
+        if (index >= 0) {
+          if (item.isNewItem) {
+            items.splice(index, 1);
+          } else {
+            items[index].isDirty = false;
+          }
+        }
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        data: items
+      });
     }
   };
   return actions;
@@ -666,13 +764,15 @@ const getSearchFieldByColumn = (column: IGridColumn) => {
   return searchField;
 };
 
-const updateColumns = (
-  columns: IGridColumn[],
+export const updateColumns = (
+  newColumns: IGridColumn[],
+  existingColumns: IGridColumn[],
   sortingOptions: ISortingOptions,
   onColumnSort: any,
-  removeSorting?: boolean
+  removeSorting?: boolean,
+  isActionColumnRequired?: boolean
 ) => {
-  columns.forEach((column) => {
+  newColumns.forEach((column) => {
     column.columnActionsMode =
       removeSorting || column.disableSort
         ? ColumnActionsMode.disabled
@@ -693,8 +793,17 @@ const updateColumns = (
         ? true
         : column.required || column.selected;
     column.onColumnClick = column.onColumnClick || onColumnSort;
+    let existingColumn = existingColumns && existingColumns.find((col) => col.key === column.key);
+    column.selected = existingColumn ? existingColumn.selected : column.selected;
+    if (!column.onRenderBackup) {
+      column.onRenderBackup = column.onRender;
+    }
   });
-  return columns;
+
+  if (isActionColumnRequired) {
+  }
+
+  return newColumns;
 };
 
 const getPagingOptions = (pagingOptions?: IPagingOptions) => {

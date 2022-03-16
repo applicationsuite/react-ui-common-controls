@@ -1,13 +1,9 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import {
-  Dropdown,
-  IDropdownOption,
-  IStackTokens,
-  Stack,
-  TextField,
-  DatePicker
-} from '@fluentui/react';
+import { Dropdown, IDropdownOption } from '@fluentui/react/lib/Dropdown';
+import { IStackTokens, Stack } from '@fluentui/react/lib/Stack';
+import { TextField } from '@fluentui/react/lib/TextField';
+import { DatePicker } from '@fluentui/react/lib/DatePicker';
 import { IGridFilter, FilterOperation, FilterDataType } from '../GridView.models';
 import { GridFilterLabel } from './GridFilterLabel';
 import { rangeFilterStyles } from './RangeFilter.styles';

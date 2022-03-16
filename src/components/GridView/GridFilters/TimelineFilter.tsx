@@ -1,13 +1,8 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import {
-  Dropdown,
-  IDropdownOption,
-  DatePicker,
-  IStackTokens,
-  Stack,
-  TextField
-} from '@fluentui/react';
+import { Dropdown, IDropdownOption } from '@fluentui/react/lib/Dropdown';
+import { DatePicker } from '@fluentui/react/lib/DatePicker';
+import { IStackTokens, Stack } from '@fluentui/react/lib/Stack';
 import {
   IGridFilter,
   FilterDataType,
@@ -18,7 +13,7 @@ import {
   QUATER_START_YEAR,
   TIME_LINE_FILTER_TYPE_MAP
 } from '../GridView.models';
-import { MONTH_NAMES_SHORT } from '../../../';
+import { MONTH_NAMES_SHORT } from '../../../constants';
 import { GridFilterLabel } from './GridFilterLabel';
 import { rangeFilterStyles } from './RangeFilter.styles';
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
-import { FocusZone, Checkbox } from '@fluentui/react';
+import { FocusZone } from '@fluentui/react/lib/FocusZone';
+import { Checkbox } from '@fluentui/react/lib/Checkbox';
 import { IGridColumn } from '../GridView.models';
 import { columnPickerStyles } from './ColumnPicker.styles';
 

@@ -4,12 +4,8 @@ export enum WizardStepStatus {
   Completed = 2,
   Error = 3,
   Blocked = 4,
-  InProgress = 5
-}
-
-export enum WizardType {
-  Vertical = 0,
-  Horizontal = 1
+  InProgress = 5,
+  Disabled = 6
 }
 
 export const MAX_HORIZONTAL_STEPS = 20;
@@ -18,6 +14,22 @@ export const ORDER_COLUMN = 'order';
 export const WIZARD_LOCALIZATION_CONSTANTS = {
   STEPS: { id: 'Core.Wizard.Steps', defaultMessage: 'Steps' }
 };
+
+
+export const WIZARD_STEP_STATUS_STRINGS = {
+  [WizardStepStatus.NotStarted]: 'Not Started',
+  [WizardStepStatus.Started]: 'Started',
+  [WizardStepStatus.Completed]: 'Completed',
+  [WizardStepStatus.Error]: 'Error',
+  [WizardStepStatus.Blocked]: 'Blocked',
+  [WizardStepStatus.InProgress]: 'In Progress',
+  [WizardStepStatus.Disabled]: 'Disabled'
+};
+
+export enum WizardType {
+  Vertical = 0,
+  Horizontal = 1
+}
 
 export interface IWizardData {
   type: WizardType;
@@ -41,6 +53,7 @@ export interface IWizardStep extends IWizardStepData {
   disabled?: boolean;
   dependentStepIds?: string[];
   isNavigationBlocked?: boolean;
+  iconName?: string;
   StepComponent: any;
   StepSummaryComponent?: any;
   onChange?: (step: IWizardStepData) => void; // This events indivisual step component will call upon data change
@@ -67,9 +80,25 @@ export interface IWizardProps {
     currentStep?: IWizardStep,
     lastStep?: IWizardStep
   ) => void;
+  defaultStepLinksCollapse?: boolean;
   stepClass?: string;
   stepActiveClass?: string;
   wizardLinksClass?: string;
   wizardContainerClass?: string;
   wizardLinkTextClass?: string;
+}
+
+export interface IWizardStepLinkGroup {
+  name?: string;
+  links: IWizardStepLink[];
+}
+
+export interface IWizardStepLink {
+  key: string;
+  name: string;
+  icon?: string;
+  disabled?: boolean;
+  status: WizardStepStatus;
+  isCurrentItem: boolean;
+  stepData: IWizardStep;
 }

@@ -3,11 +3,11 @@ import { IPeoplePickerProps, PeoplePickerType } from './PeoplePicker.models';
 import {
   NormalPeoplePicker,
   IBasePickerSuggestionsProps,
-  Label,
-  IInputProps,
-  ICalloutProps,
-  IPersonaProps
-} from '@fluentui/react';
+  IInputProps
+} from '@fluentui/react/lib/Pickers';
+import { IPersonaProps } from '@fluentui/react/lib/Persona';
+import { Label } from '@fluentui/react/lib/Label';
+import { ICalloutProps } from '@fluentui/react/lib/Callout';
 import { createUseStyles } from 'react-jss';
 import { useLocalization, localizedString } from '../LanguageProvider';
 import { mergeClassNames } from '../../utilities/mergeClassNames';

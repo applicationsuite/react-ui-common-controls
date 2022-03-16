@@ -1,14 +1,12 @@
 import React from 'react';
 import { IAutoCompleteProps, IAutoCompleteItem, AutoCompleteType } from './AutoComplete.models';
-import {
-  TagPicker,
-  ICalloutProps,
-  Icon,
-  IInputProps,
-  IBasePickerSuggestionsProps,
-  Label,
-  Stack
-} from '@fluentui/react';
+import { TagPicker, IInputProps, IBasePickerSuggestionsProps } from '@fluentui/react/lib/Pickers';
+import { ICalloutProps } from '@fluentui/react/lib/Callout';
+import { Label } from '@fluentui/react/lib/Label';
+import { Icon } from '@fluentui/react/lib/Icon';
+import { Stack } from '@fluentui/react/lib/Stack';
+
+
 import { createUseStyles } from 'react-jss';
 import { useLocalization, localizedString } from '../LanguageProvider';
 import { mergeClassNames } from '../../utilities/mergeClassNames';

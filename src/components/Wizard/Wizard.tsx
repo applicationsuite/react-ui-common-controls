@@ -1,11 +1,12 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { Stack, IStackTokens } from '@fluentui/react';
+import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
+import { IconButton } from '@fluentui/react/lib/Button';
 import { IWizardProps, IWizardStep, WizardType, IWizardStepData } from './Wizard.models';
 import { wizardStyles } from './Wizard.styles';
 import { WizardLinks } from './WizardLinks';
 import { useInit } from './Wizard.hooks';
-import { mergeClassNames } from '../../';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
 
 const useStyles = createUseStyles(wizardStyles);
 
@@ -15,6 +16,7 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
   const stackTokens: IStackTokens = { childrenGap: 20 };
 
   const { state, actions } = useInit(props);
+  const [isCollpased, setCollapsed] = React.useState(props.defaultStepLinksCollapse);
 
   const onStepLinkClick = (step: IWizardStep) => {
     actions.updateCurrentStep(step, props.onWizardChange);
@@ -28,6 +30,7 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
       steps={state.steps}
       selectedStep={state.selectedStep}
       onStepLinkClick={onStepLinkClick}
+      defaultStepLinksCollapse={isCollpased}
     />
   );
 
@@ -54,6 +57,10 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
     actions.onNotifyChange(step);
   };
 
+  const onStepsCollapseExpandToggle = () => {
+    setCollapsed(!isCollpased);
+  };
+
   const getStepComponent = () => {
     const StepComponent = state.selectedStep?.StepComponent;
     if (!StepComponent) return null;
@@ -70,7 +77,10 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
   };
 
   const getVerticalWizard = () => {
-    let wizardLinksClass = mergeClassNames([classes.wizardLinks, props.wizardLinksClass]);
+    let wizardLinksClass = mergeClassNames([
+      isCollpased ? classes.wizardLinksCollapsed : classes.wizardLinks,
+      props.wizardLinksClass
+    ]);
     let wizardContainerClass = mergeClassNames([
       classes.wizardContainer,
       props.wizardContainerClass
@@ -79,6 +89,22 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
       <Stack horizontal tokens={stackTokens} className={classes.wizardVertical}>
         <Stack.Item align="stretch" grow className={wizardLinksClass}>
           {getWizardLinks()}
+          <div
+            className={
+              isCollpased
+                ? classes.stepCollapseExpandSectionCollapsed
+                : classes.stepCollapseExpandSection
+            }
+          >
+            <IconButton
+              iconProps={{
+                iconName: isCollpased ? 'DoubleChevronLeftMedMirrored' : 'DoubleChevronLeftMed'
+              }}
+              title={isCollpased ? 'click to expand' : 'click to collapse'}
+              ariaLabel={isCollpased ? 'click to expand' : 'click to collapse'}
+              onClick={onStepsCollapseExpandToggle}
+            />
+          </div>
         </Stack.Item>
         <Stack.Item grow className={classes.wizardDivider}>
           <div />

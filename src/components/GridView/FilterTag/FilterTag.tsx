@@ -1,6 +1,9 @@
 import { createUseStyles } from 'react-jss';
 import * as React from 'react';
-import { Link, Callout, PrimaryButton, DefaultButton, Icon } from '@fluentui/react';
+import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
+import { Link } from '@fluentui/react/lib/Link';
+import { Callout } from '@fluentui/react/lib/Callout';
+import { Icon } from '@fluentui/react/lib/Icon';
 import { cloneDeep } from 'lodash';
 import { filterTagStyles } from './FilterTag.styles';
 import {

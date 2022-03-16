@@ -7,10 +7,14 @@ import {
   FileUploadError,
   FILE_UPLOAD_ERRORS,
   FileUploadState
-} from '..';
+} from '../FileUpload.models';
 import { fileUploaderStyles } from './FileUploader.styles';
-import { IColumn, Icon, ProgressIndicator, IconButton, DetailsList, Link } from '@fluentui/react';
-import { mergeClassNames } from '../../../';
+import { IColumn, DetailsList } from '@fluentui/react/lib/DetailsList';
+import { Icon } from '@fluentui/react/lib/Icon';
+import { IconButton } from '@fluentui/react/lib/Button';
+import { Link } from '@fluentui/react/lib/Link';
+import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
+import { mergeClassNames } from '../../../utilities/mergeClassNames';
 
 const useStyles = createUseStyles(fileUploaderStyles);
 

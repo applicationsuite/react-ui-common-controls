@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { MessageBar, MessageBarType } from '@fluentui/react';
+import { MessageBar, MessageBarType } from '@fluentui/react/lib/MessageBar';
 import { GridViewMessageType, IGridViewMessageData } from '../GridView.models';
 import { statusMessageStyles } from './StatusMessage.styles';
 

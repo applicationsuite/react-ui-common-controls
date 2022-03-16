@@ -14,6 +14,13 @@ export const gridViewStyles = (theme: string) => ({
   fliterGridContainer: {
     display: 'flex'
   },
+  loadingSection: {
+    margin: '10px',
+    padding: '2px',
+    '& > .ms-Shimmer-container': {
+      margin: '10px 0'
+    }
+  },
   filtersSection: {
     width: '20%',
     marginLeft: '10px',
@@ -94,5 +101,12 @@ export const gridViewStyles = (theme: string) => ({
   },
   checkBoxEvent: {
     pointerEvents: 'none'
+  },
+  gridviewAddSection: {
+    padding: '10px'
+  },
+  gridviewActionColumnButton: {
+    padding: '5px',
+    marginRight: '5px'
   }
 });

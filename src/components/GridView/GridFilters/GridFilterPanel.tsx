@@ -1,6 +1,7 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { Panel, PanelType, PrimaryButton, DefaultButton } from '@fluentui/react';
+import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
+import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import { IGridFilterProps } from '../GridView.models';
 import { GridFilters } from './GridFilters';
 import { gridFilterPanelStyles } from './GridFilterPanel.styles';

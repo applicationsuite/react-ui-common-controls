@@ -1,14 +1,12 @@
 import React, { FC, ReactElement, useMemo, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
+import { Callout } from '@fluentui/react/lib/Callout';
+import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
 import {
-  Callout,
-  IContextualMenuItem,
-  Stack,
-  IStackTokens,
-  IIconProps,
   DefaultButton,
   CommandButton
-} from '@fluentui/react';
+} from '@fluentui/react/lib/Button';
 import { getQuickActionBarItems } from './helpers';
 import useDimensions from './useDimension';
 import { QuickSearch } from '../QuickSearch';
@@ -131,6 +129,32 @@ export const QuickActionSection = (props: IQuickActionSectionParams) => {
           text="Edit"
           disabled={props.selectedItems ? props.selectedItems.length !== 1 : true}
           onClick={props.onEdit}
+        />
+      </div>
+    );
+  const getSaveButton = () =>
+    props.onSave && (
+      <div>
+        <DefaultButton
+          className={classes.borderlessButton}
+          ariaLabel="Save"
+          iconProps={{ iconName: 'Save' }}
+          text="Save"
+          // disabled={props.selectedItems ? props.selectedItems.length !== 1 : true}
+          onClick={props.onSave}
+        />
+      </div>
+    );
+  const getCancelButton = () =>
+    props.onCancel && (
+      <div>
+        <DefaultButton
+          className={classes.borderlessButton}
+          ariaLabel="Cancel"
+          iconProps={{ iconName: 'Cancel' }}
+          text="Cancel"
+          // disabled={props.selectedItems ? props.selectedItems.length !== 1 : true}
+          onClick={props.onCancel}
         />
       </div>
     );
@@ -268,6 +292,8 @@ export const QuickActionSection = (props: IQuickActionSectionParams) => {
     [GridViewActionBarItems.RefreshButton]: getRefreshButton,
     [GridViewActionBarItems.ExportButton]: getExportButton,
     [GridViewActionBarItems.EditButton]: getEditButton,
+    [GridViewActionBarItems.SaveButton]: getSaveButton,
+    [GridViewActionBarItems.CancelButton]: getCancelButton,
     [GridViewActionBarItems.DeleteButton]: getDeleteButton,
     [GridViewActionBarItems.GroupColumnsButton]: getGroupColumnsButton,
     [GridViewActionBarItems.SortButton]: getSortButton,
@@ -289,6 +315,12 @@ export const QuickActionSection = (props: IQuickActionSectionParams) => {
     }
     if (props.onEdit) {
       applicableItems.push(GridViewActionBarItems.EditButton);
+    }
+    if (props.onSave) {
+      applicableItems.push(GridViewActionBarItems.SaveButton);
+    }
+    if (props.onCancel) {
+      applicableItems.push(GridViewActionBarItems.CancelButton);
     }
     if (props.allowGroupSelection && getGroupColumns(props.columns!).items.length) {
       applicableItems.push(GridViewActionBarItems.GroupColumnsButton);

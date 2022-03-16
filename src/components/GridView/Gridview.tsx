@@ -1,7 +1,15 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { Stack, StackItem, Icon, ShimmerElementType, mergeStyles, Shimmer } from '@fluentui/react';
-import { HighlightText, SORT_TYPE, Pagination, PaginationWithoutPages } from '../../';
+import { Stack, StackItem } from '@fluentui/react/lib/Stack';
+import { Icon } from '@fluentui/react/lib/Icon';
+import { Shimmer, ShimmerElementType } from '@fluentui/react/lib/Shimmer';
+import { PrimaryButton, DefaultButton, CommandBarButton } from '@fluentui/react/lib/Button';
+import { TextField } from '@fluentui/react/lib/TextField';
+import { ComboBox, IComboBoxOption } from '@fluentui/react/lib/ComboBox';
+import { DatePicker } from '@fluentui/react/lib/DatePicker';
+import { DayOfWeek } from '@fluentui/react/lib/DateTimeUtilities';
+import { Dialog, DialogFooter } from '@fluentui/react/lib/Dialog';
+import { ColumnActionsMode } from '@fluentui/react/lib/DetailsList';
 import { cloneDeep } from 'lodash';
 import {
   IGridFilter,
@@ -18,19 +26,27 @@ import {
   IGridViewMessage,
   IGridViewMessageData,
   IExportOptions,
-  DEFAULT_MESSAGE_DISMISS_TIME
+  DEFAULT_MESSAGE_DISMISS_TIME,
+  IConfirmation,
+  OperationType,
+  GRIDVIEW_LOCALIZATION_STRINGS,
+  ControlType
 } from './GridView.models';
-import { PageType } from '../Pagination';
 import { GridViewDefault } from './GridViewDefault';
 import { useInit, getFilteredSelectedItems, getUpdateFilters } from './GridView.hooks';
 import { IGridViewActions } from './GridView.actions';
+import { Pagination, PaginationWithoutPages, PageType } from '../Pagination';
 import { QuickActionSection as QuickActionSectionDefault } from './QuickActionSection';
 import { FilterTags } from './FilterTag';
 import { GridFilterPanel, GridFilters } from './GridFilters';
 import { StatusMessages } from './StatusMessage';
 import { GridSummary } from './GridSummary';
 import { gridViewStyles } from './GridView.styles';
+import { HighlightText } from '../HighlightText';
+import { SORT_TYPE } from '../../constants';
 import { GridViewContext } from './GridView.context';
+import { useLocalization, localizedString } from '../LanguageProvider/locallizationUtil';
+import { COMMON_LOCALIZATION_STRINGS } from '../../constants/CommonConstants';
 
 const useStyles = createUseStyles(gridViewStyles);
 let isInitialLoad = false;
@@ -55,10 +71,14 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     onSelectionChange
   };
   const { state, actions, selection } = useInit(props, callBacks);
+  const [confirmation, setConfirmation] = React.useState<IConfirmation>({
+    showConfirmation: false
+  });
   const stateRef = React.useRef<IGridViewData>();
   const actionsRef = React.useRef<IGridViewActions>();
   stateRef.current = state;
   actionsRef.current = actions;
+  const localization = useLocalization();
 
   React.useEffect(() => {
     updateMessageList(props.statusMessages);
@@ -70,11 +90,16 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   function onSelectionChange() {
     const currentActions = actionsRef.current as IGridViewActions;
-    currentActions.applySelectedItems(selection.getSelection());
+    const selections = selection.getSelection();
+    let dirtySelections = selections.filter((item) => item.isDirty === true);
+    if (dirtySelections.length === selections.length) {
+      return;
+    }
+    currentActions.applySelectedItems(selections);
     if (!isInitialLoad) {
       props.onHandleChange &&
         props.onHandleChange(
-          getSelections(GridViewChangeType.SelectedItems, selection.getSelection()),
+          getSelections(GridViewChangeType.SelectedItems, selections),
           GridViewChangeType.SelectedItems
         );
     }
@@ -119,7 +144,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   const getItems = () => {
     const items =
-      props.hidePaging || props.allowGrouping
+      props.allowAdd || props.hidePaging || props.allowGrouping
         ? state.filteredItems
         : props.gridViewType === GridViewType.InMemory
         ? state.paginatedFilteredItems
@@ -407,12 +432,33 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
 
   const onEdit = () => {
     const selections = getSelections();
-    props.onEdit && props.onEdit(selections.selectedItems?.length && selections.selectedItems[0]);
+    onEditRecords(selections.selectedItems || []);
+  };
+
+  const onSave = () => {
+    let itemsToUpdate = getItemsToEdit();
+    onSaveRecords(itemsToUpdate);
+  };
+
+  const onCancel = () => {
+    let itemsToUpdate = getItemsToEdit();
+    onCancelRecords(itemsToUpdate);
+  };
+
+  const getItemsToEdit = () => {
+    let itemsToUpdate =
+      stateRef.current?.filteredItems?.filter((item) => item.isDirty === true) || [];
+    return itemsToUpdate;
   };
 
   const onDelete = () => {
     const selections = getSelections();
-    props.onDelete && props.onDelete(selections.selectedItems);
+
+    setConfirmation({
+      showConfirmation: true,
+      data: selections.selectedItems,
+      confirmCallback: onDeleteRecords
+    });
   };
 
   const onGroupColumnChange = (column?: IGridColumn) => {
@@ -428,11 +474,84 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       );
   };
 
+  const onAddRecord = () => {
+    actionsRef.current?.addRecord();
+  };
+
+  const onEditRecords = (items: any[]) => {
+    actionsRef.current?.editRecords(items);
+  };
+
+  const onDeleteRecords = (items: any[]) => {
+    const status = actionsRef.current?.deleteRecords(items);
+    status && props.onItemsUpdate && props.onItemsUpdate(items, OperationType.Delete);
+    setConfirmation({
+      showConfirmation: false,
+      data: []
+    });
+  };
+
+  const onCancelRecords = (items: any) => {
+    actionsRef.current?.cancelRecords(items);
+  };
+
+  const onSaveRecords = (items: any[]) => {
+    let errors = 0;
+    let columns = stateRef.current?.columns;
+    columns = columns?.filter((item) => !(item.readonly || item.key === 'Action')) || [];
+
+    items &&
+      items.forEach((item) => {
+        columns &&
+          columns.forEach((column) => {
+            const value = item.updatedData[column.fieldName!];
+            if (column.onValidate) {
+              item.updatedData[`${column.fieldName!}Error`] = column.onValidate(
+                value,
+                column,
+                item
+              );
+            } else {
+              item.updatedData[`${column.fieldName!}Error`] =
+                column.required &&
+                !(value === 0 || value === false) &&
+                !value &&
+                localizedString(COMMON_LOCALIZATION_STRINGS.REQUIRED_FIELD, localization);
+            }
+            errors = errors + item.updatedData[`${column.fieldName!}Error`] ? 1 : 0;
+          });
+      });
+    if (errors > 0) {
+      actionsRef.current?.changeRecords(items);
+      return;
+    }
+    let status = actionsRef.current?.saveRecords(items);
+    let isAdd = items.some((i) => i.isNewItem === true);
+    status &&
+      props.onItemsUpdate &&
+      props.onItemsUpdate(items, isAdd ? OperationType.Add : OperationType.Edit);
+  };
+
+  const onRecordUpdate = (column: IGridColumn, value: any, item: any) => {
+    item.updatedData = item.updatedData || {};
+    item.updatedData[column.fieldName!] = value;
+    if (column.onValidate) {
+      item.updatedData[`${column.fieldName!}Error`] = column.onValidate(value, column, item);
+    } else {
+      item.updatedData[`${column.fieldName!}Error`] =
+        column.required &&
+        !value &&
+        localizedString(COMMON_LOCALIZATION_STRINGS.REQUIRED_FIELD, localization);
+    }
+    actionsRef.current?.changeRecords([item]);
+  };
+
   // #endregion "Render HTML Section"
 
   // #region "Render HTML Section"
 
   const getQuickActionSection: any = () => {
+    const itemsToEdit = getItemsToEdit();
     const quickActionSectionParams: IQuickActionSectionParams = {
       gridViewType: props.gridViewType,
       columns: state.columns,
@@ -453,8 +572,11 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       onRefresh: props.onRefresh!,
       exportOptions: props.exportOptions,
       onExport: props.onExport ? onExport : undefined,
-      onEdit: props.onEdit ? onEdit : undefined,
-      onDelete: props.onDelete ? onDelete : undefined,
+      onEdit:
+        !props.hideBulkEdit && itemsToEdit.length === 0 && props.allowEdit ? onEdit : undefined,
+      onSave: props.allowEdit && itemsToEdit.length > 0 ? onSave : undefined,
+      onCancel: props.allowEdit && itemsToEdit.length > 0 ? onCancel : undefined,
+      onDelete: !props.hideBulkDelete && props.allowDelete ? onDelete : undefined,
       selectedItems: state.selectedItems,
       // leftItemsOrder: props.actionBarItemsOrder,
       quickActionSectionItems: props.quickActionSectionItems,
@@ -568,6 +690,57 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     );
   };
 
+  const getGridAddRecordSection = () => {
+    if (!props.allowAdd) {
+      return null;
+    }
+    return (
+      <CommandBarButton
+        className={classes.gridviewAddSection}
+        iconProps={{ iconName: 'Add' }}
+        text={localizedString(GRIDVIEW_LOCALIZATION_STRINGS.ADD, localization)}
+        onClick={onAddRecord}
+      />
+    );
+  };
+
+  const getDeleteConfirmationDialog = () => {
+    return (
+      <Dialog
+        hidden={!confirmation.showConfirmation}
+        onDismiss={() => {
+          setConfirmation({
+            showConfirmation: false,
+            data: undefined
+          });
+        }}
+        dialogContentProps={{
+          title: localizedString(GRIDVIEW_LOCALIZATION_STRINGS.CONFIRMATION, localization),
+          subText: localizedString(GRIDVIEW_LOCALIZATION_STRINGS.CONFIRMATION_MESSAGE, localization)
+        }}
+        modalProps={{ isBlocking: true }}
+      >
+        <DialogFooter>
+          <PrimaryButton
+            onClick={() => {
+              confirmation.confirmCallback && confirmation.confirmCallback(confirmation.data);
+            }}
+            text={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
+          />
+          <DefaultButton
+            onClick={() => {
+              setConfirmation({
+                showConfirmation: false,
+                data: undefined
+              });
+            }}
+            text={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
+          />
+        </DialogFooter>
+      </Dialog>
+    );
+  };
+
   const getGridViewSection = () => {
     if (props.showFiltersAside) {
       return (
@@ -583,7 +756,9 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
             {getGridSummarySection()}
             {getGridViewData()}
             {getNoResultsSection()}
+            {getGridAddRecordSection()}
             {getPager()}
+            {getDeleteConfirmationDialog()}
           </div>
         </div>
       );
@@ -594,38 +769,219 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           {getGridSummarySection()}
           {getGridViewData()}
           {getNoResultsSection()}
+          {getGridAddRecordSection()}
           {getPager()}
+          {getDeleteConfirmationDialog()}
         </div>
       );
     }
   };
 
-  const getHighLightedColumns = (columns: IGridColumn[]) => {
-    let searchableColumns = columns.filter((col) => col.searchable === true && !col.onRender);
-    searchableColumns.forEach((column) => {
-      column.onRender =
-        column.onRender ||
-        ((item: any) => {
-          let value = item[column.fieldName!];
-          value = value === 0 ? value : value || '';
-          return (
+  const renderSaveRecordActionButtons = (item: any, column: IGridColumn) => {
+    return (
+      !props.hideInlineEdit && (
+        <>
+          <CommandBarButton
+            className={classes.gridviewActionColumnButton}
+            iconProps={{ iconName: 'Save' }}
+            text={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
+            onClick={() => {
+              onSaveRecords([item]);
+            }}
+          />
+          <CommandBarButton
+            className={classes.gridviewActionColumnButton}
+            iconProps={{ iconName: 'Cancel' }}
+            text={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
+            onClick={() => {
+              onCancelRecords([item]);
+            }}
+          />
+        </>
+      )
+    );
+  };
+
+  const renderAsTextBox = (controlValue: string, item: any, column: IGridColumn) => {
+    return (
+      <TextField
+        value={controlValue}
+        errorMessage={item.updatedData[`${column.fieldName!}Error`]}
+        onChange={(e: any, value?: string) => onRecordUpdate(column, value || '', item)}
+      />
+    );
+  };
+
+  const renderAsComboBox = (controlValue: string, item: any, column: IGridColumn) => {
+    return (
+      <ComboBox
+        options={column.editControlOptions || []}
+        defaultSelectedKey={controlValue}
+        onChange={(event: any, option?: IComboBoxOption) => {
+          onRecordUpdate(column, option!.key, item);
+        }}
+        errorMessage={item.updatedData[`${column.fieldName!}Error`]}
+      />
+    );
+  };
+
+  const renderAsDatePicker = (controlValue: string, item: any, column: IGridColumn) => {
+    const date = controlValue ? new Date(controlValue) : undefined;
+    return (
+      <DatePicker
+        firstDayOfWeek={DayOfWeek.Sunday}
+        ariaLabel={localizedString(GRIDVIEW_LOCALIZATION_STRINGS.SELECT_DATE, localization)}
+        value={date}
+        isRequired={column.required}
+        onSelectDate={(date?: Date | null) => {
+          onRecordUpdate(column, date || '', item);
+        }}
+      />
+    );
+  };
+
+  const renderAsCustom = (controlValue: string, item: any, column: IGridColumn) => {
+    return column.onRenderEditControl
+      ? column.onRenderEditControl(item, onRecordUpdate, column)
+      : renderAsLabel(controlValue, item, column);
+  };
+
+  const renderAsLabel = (controlValue: string, item: any, column: IGridColumn) => {
+    return <span>{controlValue}</span>;
+  };
+
+  const renderEditableRow = (item: any, column: IGridColumn) => {
+    let value = item.updatedData[column!.fieldName!];
+    value = value === 0 || value === false ? value : value || '';
+    if (column.formatValue) {
+      value = column.formatValue(value, item);
+    }
+    if (column.readonly) {
+      return renderAsLabel(value, item, column);
+    } else if (column.editControlType === ControlType.TextBox) {
+      return renderAsTextBox(value, item, column);
+    } else if (column.editControlType === ControlType.ComboBox) {
+      return renderAsComboBox(value, item, column);
+    } else if (column.editControlType === ControlType.DatePicker) {
+      return renderAsDatePicker(value, item, column);
+    } else if (column.editControlType === ControlType.Custom) {
+      return renderAsCustom(value, item, column);
+    } else {
+      return renderAsTextBox(value, item, column);
+    }
+  };
+
+  const renderColumnInUpdateMode = (item: any, column: IGridColumn) => {
+    if (column.key === 'Action') {
+      return renderSaveRecordActionButtons(item, column);
+    } else {
+      return renderEditableRow(item, column);
+    }
+  };
+
+  const renderEditButton = (item: any) => {
+    if (!props.allowEdit) {
+      return null;
+    } else {
+      return (
+        <CommandBarButton
+          className={classes.gridviewActionColumnButton}
+          iconProps={{ iconName: 'Edit' }}
+          text={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
+          onClick={() => {
+            onEditRecords([item]);
+          }}
+        />
+      );
+    }
+  };
+
+  const renderDeleteButton = (item: any) => {
+    if (!props.allowDelete) {
+      return null;
+    } else {
+      return (
+        <CommandBarButton
+          className={classes.gridviewActionColumnButton}
+          iconProps={{ iconName: 'Delete' }}
+          text={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
+          onClick={() => {
+            setConfirmation({
+              showConfirmation: true,
+              data: [item],
+              confirmCallback: onDeleteRecords
+            });
+          }}
+        />
+      );
+    }
+  };
+
+  const renderActionColumn = () => {
+    const actionColumn: IGridColumn = {
+      key: 'Action',
+      name: 'Action',
+      fieldName: 'Action',
+      minWidth: 210,
+      maxWidth: 210,
+      isRowHeader: true,
+      isResizable: false,
+      columnActionsMode: ColumnActionsMode.disabled,
+      required: true,
+      selected: true,
+      onRender: (item: any) => {
+        return (
+          <Stack horizontal>
+            {!props.hideInlineEdit && renderEditButton(item)}
+            {!props.hideInlineDelete && renderDeleteButton(item)}
+          </Stack>
+        );
+      }
+    };
+    actionColumn.onRenderBackup = actionColumn.onRender;
+    return actionColumn;
+  };
+
+  const getUpdatedColumns = (columnsData: IGridColumn[]) => {
+    let columns = columnsData;
+    if (
+      (props.allowAdd || props.allowEdit || props.allowDelete) &&
+      !columns.filter((col) => col.key === 'Action').length
+    ) {
+      columns.push(renderActionColumn());
+    }
+    const itemsToUpdate = getItemsToEdit();
+    if (!(itemsToUpdate.length || props.highLightSearchText)) {
+      return columns;
+    }
+
+    columns.forEach((column) => {
+      column.onRender = (item: any, index?: number, col?: IGridColumn) => {
+        if (item.isDirty) {
+          return renderColumnInUpdateMode(item, column!);
+        } else if (column?.onRenderBackup) {
+          return column?.onRenderBackup(item, index, col);
+        } else {
+          let value = item[column!.fieldName!];
+          value = value === 0 || value === false ? value : value || '';
+          return props.highLightSearchText ? (
             <HighlightText
               text={value.toString()}
               textToBeHighlighted={stateRef.current!.searchText || ''}
             />
+          ) : (
+            <>{value.toString()} </>
           );
-        });
+        }
+      };
     });
+
     return columns;
   };
 
   const getGridViewData = () => {
     const items = getItems();
-    const columns = state.columns
-      ? props.highLightSearchText
-        ? getHighLightedColumns(state.columns)
-        : state.columns
-      : [];
+    const columns = getUpdatedColumns(state.columns!);
 
     const gridViewDataClass = props.gridDataClass
       ? mergeClassNames([classes.gridViewData, props.gridDataClass])
@@ -659,7 +1015,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         <GridViewDefault
           {...props}
           items={items || []}
-          columns={columns}
+          columns={columns || []}
           selection={props.allowSelection ? selection : undefined}
           groups={props.allowGrouping ? props.groups || state.groups : undefined}
         />
@@ -753,7 +1109,11 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   };
 
   const getPager = () => {
-    if (props.hidePaging || (props.gridViewType === GridViewType.InMemory && props.allowGrouping))
+    if (
+      props.hidePaging ||
+      props.allowAdd ||
+      (props.gridViewType === GridViewType.InMemory && props.allowGrouping)
+    )
       return null;
     const totalCount =
       state.gridViewType === GridViewType.InMemory
@@ -791,15 +1151,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   };
 
   const getGridShimmer = () => {
-    const wrapperClass = mergeStyles({
-      padding: 2,
-      selectors: {
-        '& > .ms-Shimmer-container': {
-          margin: '10px 0'
-        }
-      }
-    });
-
     const items = [];
     items.push(
       <Shimmer
@@ -960,7 +1311,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       />
     );
 
-    return <div className={wrapperClass}>{items}</div>;
+    return <div className={classes.loadingSection}>{items}</div>;
   };
 
   const mergeClassNames = (classNames: (string | undefined)[]) =>

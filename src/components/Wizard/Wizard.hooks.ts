@@ -9,7 +9,8 @@ import {
   IWizardStepData,
   ORDER_COLUMN
 } from './Wizard.models';
-import { SORT_TYPE, sortValues } from '../../';
+import { SORT_TYPE } from '../../constants';
+import { sortValues } from '../../utilities';
 
 export const useInit = (props: IWizardProps) => {
   const [state, dispatch] = useReducer(wizardReducer, {});

@@ -1,5 +1,6 @@
 import React from 'react';
-import { IChoiceGroupOption, TextField, ChoiceGroup } from '@fluentui/react';
+import { IChoiceGroupOption, ChoiceGroup } from '@fluentui/react/lib/ChoiceGroup';
+import { TextField } from '@fluentui/react/lib/TextField';
 import { createUseStyles } from 'react-jss';
 import { IGridFilter, IGridFilterItem, FILTER_ITEM_TEXT_FIELD } from '../GridView.models';
 import { GridFilterLabel } from './GridFilterLabel';

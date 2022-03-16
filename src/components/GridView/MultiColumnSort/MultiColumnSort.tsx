@@ -2,7 +2,10 @@ import React from 'react';
 import { createUseStyles } from 'react-jss';
 import { IMultiColumnSort, ISortingOptions } from '../GridView.models';
 import { multiColumnSortStyles } from './MultiColumnSort.styles';
-import { Stack, PrimaryButton, DefaultButton, IDropdownOption, Dropdown } from '@fluentui/react';
+import { IDropdownOption, Dropdown } from '@fluentui/react/lib/Dropdown';
+import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
+import { Stack } from '@fluentui/react/lib/Stack';
+
 
 const useStyles = createUseStyles(multiColumnSortStyles);
 

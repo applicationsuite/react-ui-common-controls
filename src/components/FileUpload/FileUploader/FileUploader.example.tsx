@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileUploader, FILE_EXTENSIONS, IFileInfo, FileUploaderType, FileUploadState } from '..';
 import { parseExcelFileToJSON } from '../fileParsers';
-import { ProgressIndicator } from '@fluentui/react';
+import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 
 export const FileUploaderExample = () => {
   const [files, setFiles] = React.useState<IFileInfo[]>();

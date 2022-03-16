@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
-import { IconButton, Dropdown, DefaultButton } from '@fluentui/react';
+import { IconButton, DefaultButton } from '@fluentui/react/lib/Button';
+import { Dropdown } from '@fluentui/react/lib/Dropdown';
 import { PageType, IPaginationProps, IPaginationWithoutPages } from './Pagination.models';
 import { paginationStyles } from './Pagination.styles';
 

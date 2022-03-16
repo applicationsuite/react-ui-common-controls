@@ -1,5 +1,6 @@
-import { IGroup } from '@fluentui/react';
-import { SORT_TYPE, applySorting } from '../../';
+import { IGroup } from '@fluentui/react/lib/DetailsList';
+import { applySorting } from '../../utilities';
+import { SORT_TYPE } from '../../constants';
 import {
   FilterDataType,
   FilterOperation,

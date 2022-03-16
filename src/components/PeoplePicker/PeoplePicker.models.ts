@@ -1,10 +1,9 @@
 import {
-  IPersonaProps,
   IPickerItemProps,
   IBasePickerProps,
   ISuggestionItemProps
-} from '@fluentui/react';
-
+} from '@fluentui/react/lib/Pickers';
+import { IPersonaProps } from '@fluentui/react/lib/Persona';
 export enum PeoplePickerType {
   InMemory = 0,
   ServerSide = 1

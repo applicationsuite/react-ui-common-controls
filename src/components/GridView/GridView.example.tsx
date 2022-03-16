@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { createUseStyles } from 'react-jss';
-import { IGroup } from '@fluentui/react';
-import { SORT_TYPE, mergeClassNames, HighlightText } from '../../';
+import { ChoiceGroup } from '@fluentui/react/lib/ChoiceGroup';
+import { IGroup } from '@fluentui/react/lib/DetailsList';
+import { HighlightText } from '../HighlightText';
+import { SORT_TYPE } from '../../constants';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
+
 import {
   GridViewType,
   IDefaultSelections,
@@ -17,7 +21,9 @@ import {
   IPagingOptions,
   GridViewActionBarItems,
   IQucickActionSectionItem,
-  QucickActionSectionAlignment
+  QucickActionSectionAlignment,
+  ControlType,
+  OperationType
 } from './GridView.models';
 import { getGridViewGroupsByFields } from './GridViewUtils';
 import { GridView } from '.';
@@ -116,7 +122,8 @@ export const GridViewExample = () => {
       filterType: FilterType.RangeFilter,
       filterDataType: FilterDataType.Number,
       filterOrder: 1,
-      disableSort: true
+      disableSort: true,
+      readonly: true
     },
     {
       key: 'column2',
@@ -143,7 +150,7 @@ export const GridViewExample = () => {
       onRender: (item: IDocument) => {
         return (
           <HighlightText
-            text={item.dateModified.toDateString()}
+            text={item.dateModified && item.dateModified.toDateString()}
             textToBeHighlighted={selectionsRef.current!.searchText!}
           />
         );
@@ -153,7 +160,8 @@ export const GridViewExample = () => {
       searchable: true,
       filterType: FilterType.TimeLineFilter,
       filterDataType: FilterDataType.Date,
-      filterOrder: 1
+      filterOrder: 1,
+      editControlType: ControlType.DatePicker
     },
     {
       key: 'column4',
@@ -171,8 +179,13 @@ export const GridViewExample = () => {
       filterType: FilterType.SelectionFilter,
       // hideSelectAll: true,
       // filterItems: [{ id: "CSV", label: "CSV"}, { id: "XLS", label: "XLS"}], //pass when server side grid
-      grouping: true
-      // groupLevel: 0
+      grouping: true,
+      // groupLevel: 0,
+      editControlType: ControlType.ComboBox,
+      editControlOptions: [
+        { key: 'CSV', text: 'CSV' },
+        { key: 'XLS', text: 'XLS' }
+      ]
     },
     {
       key: 'column5',
@@ -184,12 +197,33 @@ export const GridViewExample = () => {
       isCollapsible: true,
       data: 'number',
       selected: true,
-      onRender: (item: IDocument) => <span>{item.isValid ? 'Yes' : 'No'}</span>,
+      onRender: (item: IDocument) => (
+        <span>{item.isValid.toString() === 'true' ? 'Yes' : 'No'}</span>
+      ),
       filterType: FilterType.ToggleFilter,
       filterItems: [
         { value: true, label: 'Yes' },
         { value: false, label: 'No' }
-      ] // pass when server side grid
+      ], // pass when server side grid
+      editControlType: ControlType.Custom,
+      onRenderEditControl: (
+        item: any,
+        onChange: (column: IGridColumn, value: string, item: any) => void,
+        column?: IGridColumn
+      ) => {
+        return (
+          <ChoiceGroup
+            defaultSelectedKey={(item.isValid || item.isValid === false) && item.isValid.toString()}
+            options={[
+              { key: 'true', text: 'Yes' },
+              { key: 'false', text: 'No' }
+            ]}
+            onChange={(ev: any, option: any) => {
+              onChange(column!, option.key, item);
+            }}
+          />
+        );
+      }
     },
     {
       key: 'column6',
@@ -212,7 +246,7 @@ export const GridViewExample = () => {
 
   function getDocuments() {
     const documents: IDocument[] = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
       documents.push({
@@ -280,12 +314,8 @@ export const GridViewExample = () => {
     console.log(options);
   };
 
-  const onEdit = (item?: any) => {
-    console.log(item);
-  };
-
-  const onDelete = (itemList?: any[]) => {
-    console.log(itemList);
+  const onItemsUpdate = (items: any[], operationType: OperationType) => {
+    console.log(items);
   };
 
   // Custom Group Implementation
@@ -314,21 +344,6 @@ export const GridViewExample = () => {
         alignment: QucickActionSectionAlignment.Left,
         onRender: () => {
           return <button type="button">test</button>;
-        }
-      },
-      {
-        key: '2',
-        type: GridViewActionBarItems.EditButton,
-        alignment: QucickActionSectionAlignment.Left
-      },
-      {
-        key: '3',
-        type: GridViewActionBarItems.Custom,
-        alignment: QucickActionSectionAlignment.Left,
-        label: 'Test',
-        icon: 'edit',
-        onClick: () => {
-          console.log('Custom Action item onClick');
         }
       }
     ];
@@ -365,6 +380,9 @@ export const GridViewExample = () => {
           // allowSelection={true}
           // allowGrouping={true}
           // allowGroupSelection={true}
+          // allowAdd={true}
+          // allowEdit={true}
+          // allowDelete={true}
           // isLoading={true}
           // allowMultiLevelSorting={true}
           // sortLevel={3}
@@ -386,8 +404,7 @@ export const GridViewExample = () => {
           onHandleChange={onHandleChange}
           onRefresh={onRefresh}
           // onExport={onExport}
-          // onEdit={onEdit}
-          // onDelete={onDelete}
+          // onItemsUpdate={onItemsUpdate}
           maxFilterTagLength={2}
           checkboxVisibility={1}
           selectionMode={2}

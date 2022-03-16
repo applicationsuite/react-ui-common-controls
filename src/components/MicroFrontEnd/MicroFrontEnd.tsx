@@ -1,7 +1,7 @@
 import React from 'react';
 import { IMicroFrontEndProps, ScriptLoadStatus } from './MicroFrontEnd.models';
 import { useInit } from './MicroFrontEnd.hooks';
-import { ProgressIndicator } from '@fluentui/react';
+import { ProgressIndicator } from '@fluentui/react/lib/ProgressIndicator';
 
 export const MicroFrontEnd = (props: IMicroFrontEndProps) => {
   const { state, actions } = useInit(props, onLoadComplete);

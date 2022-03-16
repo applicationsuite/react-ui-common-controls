@@ -1,5 +1,11 @@
 # Release Notes
 
+#### 1.4.0 (2022-03-16)
+
+- getLocalizedString - localizaed utility method is deprecated (Breaking changes). Please use localizedString.
+- GridView - Inline edit feature is added
+- Wizard - Horizontal wizard and the collapsible option is added
+
 #### 1.3.0 (2022-02-21)
 
 - LanguageProvider - Changes to support localization
@@ -7,7 +13,6 @@
 #### 1.3.0 (2022-02-21)
 
 - PeoplePicker - New Control is added to support picking people with multi-item selection
-
 
 #### 1.2.0 (2022-02-19)
 

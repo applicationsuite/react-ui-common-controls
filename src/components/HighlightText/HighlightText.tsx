@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { mergeClassNames } from '../../';
+import { mergeClassNames } from '../../utilities/mergeClassNames';
 import { highlightedTextStyles } from './HighlightedText.styles';
 
 const useStyles = createUseStyles(highlightedTextStyles);
