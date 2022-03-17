@@ -155,7 +155,9 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
           className={
             link.isCurrentItem
               ? mergeClassNames([
-                  classes.stepClassActive,
+                  wizardType === WizardType.Vertical
+                    ? classes.stepClassActive
+                    : classes.stepClassActiveHorizontal,
                   props.defaultStepLinksCollapse ? classes.collapseLink : '',
                   props.stepActiveClass
                 ])

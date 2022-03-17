@@ -1,5 +1,9 @@
 # Release Notes
 
+#### 1.4.1 (2022-03-17)
+
+- Wizard - Horizontal wizard styling changes
+
 #### 1.4.0 (2022-03-16)
 
 - getLocalizedString - localizaed utility method is deprecated (Breaking changes). Please use localizedString.

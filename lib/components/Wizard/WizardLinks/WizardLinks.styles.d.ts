@@ -69,6 +69,16 @@ export declare const wizardLinksStyles: (theme: string) => {
         cursor: string;
         margin: string;
     };
+    stepClassActiveHorizontal: {
+        marginTop: string;
+        minHeight: string;
+        padding: string;
+        position: string;
+        borderBottom: string;
+        background: string;
+        cursor: string;
+        margin: string;
+    };
     collapseLink: {
         padding: string;
         paddingTop: string;

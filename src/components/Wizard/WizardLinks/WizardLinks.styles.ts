@@ -74,6 +74,17 @@ export const wizardLinksStyles = (theme: string) => ({
     margin: '0px 0px 5px 0px'
   },
 
+  stepClassActiveHorizontal: {
+    marginTop: '10px',
+    minHeight: '30px',
+    padding: '5px',
+    position: 'relative',
+    borderBottom: `4px solid #0078d4`,
+    background: 'grey',
+    cursor: 'pointer',
+    margin: '0px 0px 5px 0px'
+  },
+
   collapseLink: {
     padding: '0px',
     paddingTop: '4px'
