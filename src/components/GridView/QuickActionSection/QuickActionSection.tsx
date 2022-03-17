@@ -3,10 +3,7 @@ import { createUseStyles } from 'react-jss';
 import { Callout } from '@fluentui/react/lib/Callout';
 import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { Stack, IStackTokens } from '@fluentui/react/lib/Stack';
-import {
-  DefaultButton,
-  CommandButton
-} from '@fluentui/react/lib/Button';
+import { DefaultButton, CommandButton } from '@fluentui/react/lib/Button';
 import { getQuickActionBarItems } from './helpers';
 import useDimensions from './useDimension';
 import { QuickSearch } from '../QuickSearch';

@@ -27,4 +27,10 @@ export interface IGridViewActions {
     applySelectedColumns: (selectedColumns: IGridColumn[]) => void;
     applyGrouping: (column?: IGridColumn) => void;
     setData: (data: any) => void;
+    addRecord: () => void;
+    editRecords: (items: any[]) => void;
+    deleteRecords: (items: any[]) => boolean;
+    changeRecords: (items: any[]) => void;
+    saveRecords: (items: any[]) => boolean;
+    cancelRecords: (items: any[]) => void;
 }

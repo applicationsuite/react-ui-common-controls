@@ -91,11 +91,11 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   function onSelectionChange() {
     const currentActions = actionsRef.current as IGridViewActions;
     const selections = selection.getSelection();
-    let dirtySelections = selections.filter((item) => item.isDirty === true);
-    if (dirtySelections.length === selections.length) {
+    currentActions.applySelectedItems(selections);
+    let newItems = selections.filter((item) => item.isDirty === true && item.isNewItem === true);
+    if (newItems.length === selections.length) {
       return;
     }
-    currentActions.applySelectedItems(selections);
     if (!isInitialLoad) {
       props.onHandleChange &&
         props.onHandleChange(
@@ -377,10 +377,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       );
   };
 
-  const onRowItemClick = (column: any, item: any) => {
-    props.onGridRowItemClick && props.onGridRowItemClick(column, item);
-  };
-
   const onSearchTextChange = (searchText: string) => {
     actions.applyFilterText(state.items, searchText);
     resetSelection();
@@ -573,10 +569,13 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       exportOptions: props.exportOptions,
       onExport: props.onExport ? onExport : undefined,
       onEdit:
-        !props.hideBulkEdit && itemsToEdit.length === 0 && props.allowEdit ? onEdit : undefined,
+        !props.hideBulkEdit && props.allowSelection && itemsToEdit.length === 0 && props.allowEdit
+          ? onEdit
+          : undefined,
       onSave: props.allowEdit && itemsToEdit.length > 0 ? onSave : undefined,
       onCancel: props.allowEdit && itemsToEdit.length > 0 ? onCancel : undefined,
-      onDelete: !props.hideBulkDelete && props.allowDelete ? onDelete : undefined,
+      onDelete:
+        !props.hideBulkDelete && props.allowSelection && props.allowDelete ? onDelete : undefined,
       selectedItems: state.selectedItems,
       // leftItemsOrder: props.actionBarItemsOrder,
       quickActionSectionItems: props.quickActionSectionItems,

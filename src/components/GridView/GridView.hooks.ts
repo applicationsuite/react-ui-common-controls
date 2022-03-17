@@ -535,6 +535,7 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         if (index >= 0) {
           items[index] = { ...item.updatedData };
           items[index].isDirty = false;
+          items[index].isNewItem = false;
         }
       });
       dispatch({

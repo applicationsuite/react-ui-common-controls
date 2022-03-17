@@ -1,5 +1,6 @@
 /// <reference types="react" />
-import { IPersonaProps, IPickerItemProps, IBasePickerProps, ISuggestionItemProps } from '@fluentui/react';
+import { IPickerItemProps, IBasePickerProps, ISuggestionItemProps } from '@fluentui/react/lib/Pickers';
+import { IPersonaProps } from '@fluentui/react/lib/Persona';
 export declare enum PeoplePickerType {
     InMemory = 0,
     ServerSide = 1

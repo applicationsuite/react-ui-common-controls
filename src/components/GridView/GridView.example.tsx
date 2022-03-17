@@ -380,9 +380,9 @@ export const GridViewExample = () => {
           // allowSelection={true}
           // allowGrouping={true}
           // allowGroupSelection={true}
-          // allowAdd={true}
-          // allowEdit={true}
-          // allowDelete={true}
+          allowAdd={true}
+          allowEdit={true}
+          allowDelete={true}
           // isLoading={true}
           // allowMultiLevelSorting={true}
           // sortLevel={3}

@@ -1,7 +1,7 @@
 import { createUseStyles } from 'react-jss';
 import * as React from 'react';
 import { filterLabelStyles } from './GridFilterLabel.styles';
-import { Accordion } from '../..';
+import { Accordion } from '../../Accordion';
 
 const useStyles = createUseStyles(filterLabelStyles);
 

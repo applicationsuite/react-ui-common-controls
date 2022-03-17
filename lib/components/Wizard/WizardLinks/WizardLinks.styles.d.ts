@@ -69,6 +69,10 @@ export declare const wizardLinksStyles: (theme: string) => {
         cursor: string;
         margin: string;
     };
+    collapseLink: {
+        padding: string;
+        paddingTop: string;
+    };
     connectorDashed: {
         borderLeft: string;
         position: string;
@@ -116,5 +120,9 @@ export declare const wizardLinksStyles: (theme: string) => {
     stepDetails: {
         marginLeft: string;
         marginBottom: string;
+    };
+    horizontalSeparator: {
+        padding: string;
+        paddingTop: string;
     };
 };

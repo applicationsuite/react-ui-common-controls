@@ -15,7 +15,6 @@ export const WIZARD_LOCALIZATION_CONSTANTS = {
   STEPS: { id: 'Core.Wizard.Steps', defaultMessage: 'Steps' }
 };
 
-
 export const WIZARD_STEP_STATUS_STRINGS = {
   [WizardStepStatus.NotStarted]: 'Not Started',
   [WizardStepStatus.Started]: 'Started',

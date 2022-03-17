@@ -1,7 +1,7 @@
 import React from 'react';
-import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react';
+import { IColumn, IDetailsListProps, IGroup } from '@fluentui/react/lib/DetailsList';
 import { IGridViewActions } from './GridView.actions';
-import { PageType } from '../Pagination';
+import { PageType } from '../Pagination/Pagination.models';
 export declare enum GridViewType {
     InMemory = 0,
     ServerSide = 1
@@ -36,7 +36,9 @@ export declare enum GridViewActionBarItems {
     ColumnsButton = 6,
     FilterButton = 7,
     SearchBox = 8,
-    SortButton = 9
+    SortButton = 9,
+    SaveButton = 10,
+    CancelButton = 11
 }
 export declare enum FilterDataType {
     String = 0,
@@ -73,6 +75,17 @@ export declare enum ActionBarSectionType {
     Left = 0,
     Right = 1
 }
+export declare enum ControlType {
+    TextBox = 0,
+    ComboBox = 1,
+    DatePicker = 2,
+    Custom = 3
+}
+export declare enum OperationType {
+    Add = 0,
+    Edit = 1,
+    Delete = 2
+}
 export declare const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 export declare const FILTER_ITEM_TEXT_FIELD = "label";
 export declare const FILTER_ITEM_VALUE_FIELD = "value";
@@ -103,8 +116,24 @@ export declare const TIME_LINE_FILTER_TYPE_MAP: {
     3: string;
     4: string;
 };
-export declare const GRIDVIEW_LOCALIZATION_CONSTANTS: {
+export declare const GRIDVIEW_LOCALIZATION_STRINGS: {
+    ADD: {
+        id: string;
+        defaultMessage: string;
+    };
+    CONFIRMATION: {
+        id: string;
+        defaultMessage: string;
+    };
+    CONFIRMATION_MESSAGE: {
+        id: string;
+        defaultMessage: string;
+    };
     CLEAR_FILTERS: {
+        id: string;
+        defaultMessage: string;
+    };
+    SELECT_DATE: {
         id: string;
         defaultMessage: string;
     };
@@ -146,6 +175,8 @@ export interface IGridViewData {
     filterToApply?: IGridFilter;
     statusMessages?: IGridViewMessageData[];
     showFilters?: boolean;
+    hidePaging?: boolean;
+    isUpdateMode?: boolean;
 }
 export interface IPagingOptionsWithoutPage {
     isNextAllowed: boolean;
@@ -227,6 +258,13 @@ export interface IGridViewParams extends IDetailsListProps {
     selectFirstItemOnLoad?: boolean;
     showFiltersAside?: boolean;
     showFiltersOnLoad?: boolean;
+    allowAdd?: boolean;
+    allowEdit?: boolean;
+    allowDelete?: boolean;
+    hideInlineEdit?: boolean;
+    hideInlineDelete?: boolean;
+    hideBulkEdit?: boolean;
+    hideBulkDelete?: boolean;
     pagingOptions?: IPagingOptions;
     pagingOptionsWithoutPage?: IPagingOptionsWithoutPage;
     sortingOptions?: ISortingOptions[];
@@ -257,8 +295,7 @@ export interface IGridViewParams extends IDetailsListProps {
     onGridRowItemClick?: (column: any, item: any) => void;
     onExport?: (exportOption: IExportOptions, selections?: IDefaultSelections) => void;
     onRefresh?: () => void;
-    onEdit?: (item?: any) => void;
-    onDelete?: (items?: any[]) => void;
+    onItemsUpdate?: (items: any[], operationType: OperationType) => void;
     gridContainerClass?: string;
     actionSectionClass?: string;
     gridMainClass?: string;
@@ -282,6 +319,23 @@ export interface IGridColumn extends IColumn {
     FilterComponent?: any;
     applyFilter?: (filter: IGridFilter, items: any[]) => any[];
     applySearchText?: (searchText: string, items: any[]) => any[];
+    readonly?: boolean;
+    editControlType?: ControlType;
+    editControlOptions?: IControlOption[];
+    formatValue?: (value: string, item?: any) => string;
+    onRenderEditControl?: (item: any, onChange: (column: IGridColumn, value: string, item: any) => void, column?: IGridColumn) => any;
+    onRenderBackup?: (item: any, index?: number, column?: IGridColumn) => any;
+    onValidate?: (value: any, column?: IGridColumn, item?: any) => string;
+}
+export interface IControlOption {
+    key: string;
+    text: string;
+    data?: any;
+}
+export interface IConfirmation {
+    showConfirmation: boolean;
+    data?: any;
+    confirmCallback?: (data: any) => void;
 }
 export interface IQuickActionSectionParams {
     gridViewType: GridViewType;
@@ -309,6 +363,8 @@ export interface IQuickActionSectionParams {
     onRefresh?: () => void;
     onExport?: (fileType: string) => void;
     onEdit?: () => void;
+    onSave?: () => void;
+    onCancel?: () => void;
     onDelete?: () => void;
     onSort?: (sortingOptions: ISortingOptions[]) => void;
 }

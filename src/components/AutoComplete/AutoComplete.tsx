@@ -6,7 +6,6 @@ import { Label } from '@fluentui/react/lib/Label';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { Stack } from '@fluentui/react/lib/Stack';
 
-
 import { createUseStyles } from 'react-jss';
 import { useLocalization, localizedString } from '../LanguageProvider';
 import { mergeClassNames } from '../../utilities/mergeClassNames';

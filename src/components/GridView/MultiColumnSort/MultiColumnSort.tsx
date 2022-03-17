@@ -6,7 +6,6 @@ import { IDropdownOption, Dropdown } from '@fluentui/react/lib/Dropdown';
 import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button';
 import { Stack } from '@fluentui/react/lib/Stack';
 
-
 const useStyles = createUseStyles(multiColumnSortStyles);
 
 export const MultiColumnSort: React.FC<IMultiColumnSort> = (props) => {
