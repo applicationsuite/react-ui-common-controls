@@ -31,6 +31,7 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
       selectedStep={state.selectedStep}
       onStepLinkClick={onStepLinkClick}
       defaultStepLinksCollapse={isCollpased}
+      hideStepStatusConnector={props.hideStepStatusConnector}
     />
   );
 

@@ -2,9 +2,8 @@ import React from 'react';
 import { IconButton } from '@fluentui/react/lib/Button';
 import {
   GridViewActionBarItems,
-  IActionBarItems,
-  IQucickActionSectionItem,
-  QucickActionSectionAlignment
+  IQuickActionSectionItem,
+  QuickActionSectionAlignment
 } from '../GridView.models';
 import { applySorting } from '../../../utilities';
 import { SORT_TYPE } from '../../../constants';
@@ -21,27 +20,27 @@ function onlyUnique(value: any, index: number, self: any[]) {
 }
 
 export const getQuickActionBarItems = (
-  quickActionSectionItems: IQucickActionSectionItem[] = [],
+  quickActionSectionItems: IQuickActionSectionItem[] = [],
   params: any = {}
 ) => {
   const { applicableItems = [], actionBarAvailableItems = {}, containerSize } = params;
   let actionBarLeftItems = quickActionSectionItems.filter(
-    (item) => item.alignment === QucickActionSectionAlignment.Left
+    (item) => item.alignment === QuickActionSectionAlignment.Left
   );
   actionBarLeftItems = applySorting(
     actionBarLeftItems,
     'order',
     SORT_TYPE.ASC
-  ) as IQucickActionSectionItem[];
+  ) as IQuickActionSectionItem[];
 
   let actionBarRightItems = quickActionSectionItems.filter(
-    (item) => item.alignment === QucickActionSectionAlignment.Right
+    (item) => item.alignment === QuickActionSectionAlignment.Right
   );
   actionBarRightItems = applySorting(
     actionBarRightItems,
     'order',
     SORT_TYPE.ASC
-  ) as IQucickActionSectionItem[];
+  ) as IQuickActionSectionItem[];
 
   actionBarLeftItems.forEach((item) => {
     if (!item.onRender) {
@@ -61,7 +60,7 @@ export const getQuickActionBarItems = (
   filteredApplicabledItems.forEach((item: any, index: number) => {
     actionBarRightItems.push({
       key: (new Date().getUTCMilliseconds() + index).toString(),
-      alignment: QucickActionSectionAlignment.Right,
+      alignment: QuickActionSectionAlignment.Right,
       type: item,
       onRender: actionBarAvailableItems[item as GridViewActionBarItems]
     });
@@ -74,7 +73,7 @@ export const getQuickActionBarItems = (
   let compactView = containerSize && containerSize.width < 600;
 
   if (compactView) {
-    const allActionItems: IQucickActionSectionItem[] = [
+    const allActionItems: IQuickActionSectionItem[] = [
       ...actionBarLeftItems,
       ...actionBarRightItems
     ];
@@ -86,10 +85,10 @@ export const getQuickActionBarItems = (
       ? getMoreActionItemButton(remainingItems)
       : undefined;
 
-    let rightSectionItems: IQucickActionSectionItem[] = [
+    let rightSectionItems: IQuickActionSectionItem[] = [
       ...upfrontItems,
       ...(moreActionIconButton ? [moreActionIconButton] : [])
-    ] as IQucickActionSectionItem[];
+    ] as IQuickActionSectionItem[];
 
     return {
       actionBarLeftItems: [],
@@ -103,7 +102,7 @@ export const getQuickActionBarItems = (
   };
 };
 
-const getMoreActionItemButton = (moreItems: IQucickActionSectionItem[]) => {
+const getMoreActionItemButton = (moreItems: IQuickActionSectionItem[]) => {
   const menuItems = moreItems.map((item, index) => {
     return {
       key: `menuItem_${index}`,
@@ -120,9 +119,9 @@ const getMoreActionItemButton = (moreItems: IQucickActionSectionItem[]) => {
     />
   );
 
-  const moreActionItem: IQucickActionSectionItem = {
+  const moreActionItem: IQuickActionSectionItem = {
     key: new Date().getUTCMilliseconds().toString(),
-    alignment: QucickActionSectionAlignment.Right,
+    alignment: QuickActionSectionAlignment.Right,
     type: GridViewActionBarItems.Custom,
     onRender: moreIconButton
   };

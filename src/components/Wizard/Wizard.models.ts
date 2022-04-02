@@ -8,6 +8,11 @@ export enum WizardStepStatus {
   Disabled = 6
 }
 
+export enum WizardType {
+  Vertical = 0,
+  Horizontal = 1
+}
+
 export const MAX_HORIZONTAL_STEPS = 20;
 export const ORDER_COLUMN = 'order';
 
@@ -24,11 +29,6 @@ export const WIZARD_STEP_STATUS_STRINGS = {
   [WizardStepStatus.InProgress]: 'In Progress',
   [WizardStepStatus.Disabled]: 'Disabled'
 };
-
-export enum WizardType {
-  Vertical = 0,
-  Horizontal = 1
-}
 
 export interface IWizardData {
   type: WizardType;
@@ -85,6 +85,8 @@ export interface IWizardProps {
   wizardLinksClass?: string;
   wizardContainerClass?: string;
   wizardLinkTextClass?: string;
+  hideStepStatusText?: boolean;
+  hideStepStatusConnector?: boolean;
 }
 
 export interface IWizardStepLinkGroup {
@@ -95,6 +97,7 @@ export interface IWizardStepLinkGroup {
 export interface IWizardStepLink {
   key: string;
   name: string;
+  statusIcon?: string;
   icon?: string;
   disabled?: boolean;
   status: WizardStepStatus;

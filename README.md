@@ -32,6 +32,7 @@ The package can be installed as an npm package using the following command:
 | [MicroFrontEnd](docs/MicroFrontEnd.md)       | 2022-02-05    |
 | [Pagination](docs/Pagination.md)             | 2022-01-23    |
 | [PeoplePicker](docs/PeoplePicker.md)         | 2022-02-21    |
+| [TextEditor](docs/TextEditor.md)             | 2022-04-02    |
 | [ThemeProvider](docs/ThemeProvider.md)       | 2022-01-23    |
 | [Wizard](docs/Wizard.md)                     | 2022-01-23    |
 

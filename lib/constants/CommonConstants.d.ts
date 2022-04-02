@@ -165,6 +165,10 @@ export declare const COMMON_LOCALIZATION_STRINGS: {
         id: string;
         defaultMessage: string;
     };
+    ACTION: {
+        id: string;
+        defaultMessage: string;
+    };
     JAN: {
         id: string;
         defaultMessage: string;

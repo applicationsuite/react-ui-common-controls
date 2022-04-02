@@ -30,8 +30,10 @@ import {
   IConfirmation,
   OperationType,
   GRIDVIEW_LOCALIZATION_STRINGS,
-  ControlType
+  ControlType,
+  AlignmentType
 } from './GridView.models';
+import { GridViewShimmer } from './GridViewShimmer';
 import { GridViewDefault } from './GridViewDefault';
 import { useInit, getFilteredSelectedItems, getUpdateFilters } from './GridView.hooks';
 import { IGridViewActions } from './GridView.actions';
@@ -783,7 +785,8 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           <CommandBarButton
             className={classes.gridviewActionColumnButton}
             iconProps={{ iconName: 'Save' }}
-            text={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
+            title={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
+            //text={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
             onClick={() => {
               onSaveRecords([item]);
             }}
@@ -791,7 +794,8 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           <CommandBarButton
             className={classes.gridviewActionColumnButton}
             iconProps={{ iconName: 'Cancel' }}
-            text={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
+            title={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
+            //text={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
             onClick={() => {
               onCancelRecords([item]);
             }}
@@ -886,7 +890,8 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         <CommandBarButton
           className={classes.gridviewActionColumnButton}
           iconProps={{ iconName: 'Edit' }}
-          text={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
+          title={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
+          //text={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
           onClick={() => {
             onEditRecords([item]);
           }}
@@ -903,7 +908,8 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         <CommandBarButton
           className={classes.gridviewActionColumnButton}
           iconProps={{ iconName: 'Delete' }}
-          text={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
+          title={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
+          //text={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
           onClick={() => {
             setConfirmation({
               showConfirmation: true,
@@ -919,7 +925,9 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   const renderActionColumn = () => {
     const actionColumn: IGridColumn = {
       key: 'Action',
-      name: 'Action',
+      name: props.hideActionColumnText
+        ? ''
+        : localizedString(COMMON_LOCALIZATION_STRINGS.ACTION, localization),
       fieldName: 'Action',
       minWidth: 210,
       maxWidth: 210,
@@ -947,7 +955,11 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       (props.allowAdd || props.allowEdit || props.allowDelete) &&
       !columns.filter((col) => col.key === 'Action').length
     ) {
-      columns.push(renderActionColumn());
+      if (props.actionColumnAlignment && props.actionColumnAlignment === AlignmentType.Left) {
+        columns.unshift(renderActionColumn());
+      } else {
+        columns.push(renderActionColumn());
+      }
     }
     const itemsToUpdate = getItemsToEdit();
     if (!(itemsToUpdate.length || props.highLightSearchText)) {
@@ -1149,170 +1161,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     );
   };
 
-  const getGridShimmer = () => {
-    const items = [];
-    items.push(
-      <Shimmer
-        key={0}
-        className="shimmerClass"
-        shimmerColors={{
-          shimmerWave: 'lightgrey'
-        }}
-        shimmerElements={[
-          {
-            height: 25,
-            type: ShimmerElementType.line,
-            width: '98%'
-          },
-          {
-            height: 25,
-            type: ShimmerElementType.gap,
-            width: '2%'
-          }
-        ]}
-        width="100%"
-      />
-    );
-    for (let i = 0; i < 15; i++) {
-      items.push(
-        <Shimmer
-          key={i + 1}
-          className="shimmerClass"
-          shimmerColors={{
-            shimmerWave: 'lightgrey'
-          }}
-          shimmerElements={[
-            {
-              height: 25,
-              type: ShimmerElementType.circle,
-              width: '5%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.line,
-              width: '10%'
-            },
-            {
-              height: 25,
-              type: ShimmerElementType.gap,
-              width: '2%'
-            }
-          ]}
-          width="100%"
-        />
-      );
-    }
-    items.push(
-      <Shimmer
-        key={20}
-        className="shimmerClass"
-        shimmerColors={{
-          shimmerWave: 'lightgrey'
-        }}
-        shimmerElements={[
-          {
-            height: 25,
-            type: ShimmerElementType.line,
-            width: '17%'
-          },
-          {
-            height: 25,
-            type: ShimmerElementType.gap,
-            width: '67%'
-          },
-          {
-            height: 25,
-            type: ShimmerElementType.line,
-            width: '14%'
-          },
-          {
-            height: 25,
-            type: ShimmerElementType.gap,
-            width: '2%'
-          }
-        ]}
-        width="100%"
-      />
-    );
-
-    return <div className={classes.loadingSection}>{items}</div>;
-  };
-
   const mergeClassNames = (classNames: (string | undefined)[]) =>
     classNames.filter((className) => !!className).join(' ');
 
@@ -1329,7 +1177,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           {getMessageSection()}
           {getSelectedFiltersSection()}
         </div>
-        {props.isLoading ? getGridShimmer() : <>{getGridViewSection()}</>}
+        {props.isLoading ? <GridViewShimmer /> : <>{getGridViewSection()}</>}
       </div>
     </GridViewContext.Provider>
   );

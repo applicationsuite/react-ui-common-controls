@@ -12,7 +12,7 @@ import { MultiColumnSort } from '../MultiColumnSort';
 import { cloneDeep } from 'lodash';
 import {
   IQuickActionSectionParams,
-  IQucickActionSectionItem,
+  IQuickActionSectionItem,
   IExportOptions,
   GridViewActionBarItems,
   IGridColumn,
@@ -270,7 +270,7 @@ export const QuickActionSection = (props: IQuickActionSectionParams) => {
     </>
   );
 
-  const getCustomButton = (quickActionItem: IQucickActionSectionItem) => {
+  const getCustomButton = (quickActionItem: IQuickActionSectionItem) => {
     return (
       <>
         <DefaultButton

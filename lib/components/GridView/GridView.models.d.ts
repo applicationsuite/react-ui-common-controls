@@ -54,7 +54,7 @@ export declare enum GridViewMessageType {
     SevereWarning = 4,
     Blocked = 5
 }
-export declare enum QucickActionSectionAlignment {
+export declare enum QuickActionSectionAlignment {
     Left = 0,
     Right = 1
 }
@@ -85,6 +85,10 @@ export declare enum OperationType {
     Add = 0,
     Edit = 1,
     Delete = 2
+}
+export declare enum AlignmentType {
+    Left = "Left",
+    Right = "Right"
 }
 export declare const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
 export declare const FILTER_ITEM_TEXT_FIELD = "label";
@@ -265,6 +269,8 @@ export interface IGridViewParams extends IDetailsListProps {
     hideInlineDelete?: boolean;
     hideBulkEdit?: boolean;
     hideBulkDelete?: boolean;
+    actionColumnAlignment?: AlignmentType;
+    hideActionColumnText?: boolean;
     pagingOptions?: IPagingOptions;
     pagingOptionsWithoutPage?: IPagingOptionsWithoutPage;
     sortingOptions?: ISortingOptions[];
@@ -281,7 +287,7 @@ export interface IGridViewParams extends IDetailsListProps {
     maxSelection?: Number;
     maxFilterTagLength?: number;
     exportOptions?: IExportOptions[];
-    quickActionSectionItems?: IQucickActionSectionItem[];
+    quickActionSectionItems?: IQuickActionSectionItem[];
     QuickActionSectionComponent?: any;
     FilterTagsComponent?: any;
     GridSummaryComponent?: any;
@@ -292,7 +298,6 @@ export interface IGridViewParams extends IDetailsListProps {
     NoResultsComponent?: any;
     PagerComponent?: any;
     onHandleChange?: (selections: IDefaultSelections, gridViewChangeType: GridViewChangeType) => void;
-    onGridRowItemClick?: (column: any, item: any) => void;
     onExport?: (exportOption: IExportOptions, selections?: IDefaultSelections) => void;
     onRefresh?: () => void;
     onItemsUpdate?: (items: any[], operationType: OperationType) => void;
@@ -324,8 +329,8 @@ export interface IGridColumn extends IColumn {
     editControlOptions?: IControlOption[];
     formatValue?: (value: string, item?: any) => string;
     onRenderEditControl?: (item: any, onChange: (column: IGridColumn, value: string, item: any) => void, column?: IGridColumn) => any;
-    onRenderBackup?: (item: any, index?: number, column?: IGridColumn) => any;
     onValidate?: (value: any, column?: IGridColumn, item?: any) => string;
+    onRenderBackup?: (item: any, index?: number, column?: IGridColumn) => any;
 }
 export interface IControlOption {
     key: string;
@@ -349,8 +354,7 @@ export interface IQuickActionSectionParams {
     showFilters: boolean;
     exportOptions?: IExportOptions[];
     selectedItems?: any[];
-    actionBarItems?: IActionBarItems;
-    quickActionSectionItems?: IQucickActionSectionItem[];
+    quickActionSectionItems?: IQuickActionSectionItem[];
     allowGroupSelection?: boolean;
     quickSearchOnEnter?: boolean;
     hideQuickSearchButton?: boolean;
@@ -368,21 +372,17 @@ export interface IQuickActionSectionParams {
     onDelete?: () => void;
     onSort?: (sortingOptions: ISortingOptions[]) => void;
 }
-export interface IQucickActionSectionItem {
+export interface IQuickActionSectionItem {
     key: string;
     type: GridViewActionBarItems;
-    alignment: QucickActionSectionAlignment;
+    alignment: QuickActionSectionAlignment;
     label?: string;
     icon?: string;
     className?: string;
     order?: number;
     options?: any;
     onClick?: () => void;
-    onRender?: (quickActionSectionItem?: IQucickActionSectionItem) => any;
-}
-export interface IActionBarItems {
-    actionBarLeftItems?: GridViewActionBarItems[];
-    actionBarRightItems?: GridViewActionBarItems[];
+    onRender?: (quickActionSectionItem?: IQuickActionSectionItem) => any;
 }
 export interface IExportOptions {
     fileType: string;

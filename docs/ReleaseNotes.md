@@ -1,5 +1,11 @@
 # Release Notes
 
+#### 1.5.0
+
+- TextEditor - New Control is added to support basic text editing.
+- Gridview - Customization to show action column in the left or right.
+- Wizard - Changes to support custom icons and allow to hide steps connector.
+
 #### 1.4.1 (2022-03-17)
 
 - Wizard - Horizontal wizard styling changes

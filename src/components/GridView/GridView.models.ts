@@ -62,7 +62,7 @@ export enum GridViewMessageType {
   Blocked = 5
 }
 
-export enum QucickActionSectionAlignment {
+export enum QuickActionSectionAlignment {
   Left = 0,
   Right = 1
 }
@@ -98,6 +98,11 @@ export enum OperationType {
   Add = 0,
   Edit = 1,
   Delete = 2
+}
+
+export enum AlignmentType {
+  Left = 'Left',
+  Right = 'Right'
 }
 
 export const DEFAULT_MESSAGE_DISMISS_TIME = 5000;
@@ -299,6 +304,8 @@ export interface IGridViewParams extends IDetailsListProps {
   hideInlineDelete?: boolean;
   hideBulkEdit?: boolean;
   hideBulkDelete?: boolean;
+  actionColumnAlignment?: AlignmentType;
+  hideActionColumnText?: boolean;
 
   // Selections
   pagingOptions?: IPagingOptions; // paging options for the gridview
@@ -319,7 +326,7 @@ export interface IGridViewParams extends IDetailsListProps {
   maxSelection?: Number; // if you want a limit on maximum number of item selection
   maxFilterTagLength?: number; // max length of visible filter tag values
   exportOptions?: IExportOptions[]; // export options is for export functionality
-  quickActionSectionItems?: IQucickActionSectionItem[]; // this is to customize the action bar items like filters, quick search
+  quickActionSectionItems?: IQuickActionSectionItem[]; // this is to customize the action bar items like filters, quick search
   QuickActionSectionComponent?: any;
   FilterTagsComponent?: any;
   GridSummaryComponent?: any;
@@ -332,8 +339,6 @@ export interface IGridViewParams extends IDetailsListProps {
 
   // Handlers
   onHandleChange?: (selections: IDefaultSelections, gridViewChangeType: GridViewChangeType) => void; // For every change like paging, sorting, selections, filters this handler will be called
-  onGridRowItemClick?: (column: any, item: any) => void;
-
   onExport?: (exportOption: IExportOptions, selections?: IDefaultSelections) => void;
   onRefresh?: () => void;
   onItemsUpdate?: (items: any[], operationType: OperationType) => void;
@@ -365,17 +370,18 @@ export interface IGridColumn extends IColumn {
   applySearchText?: (searchText: string, items: any[]) => any[]; //custom way to apply the quick search
 
   //Option for Add/Edit
-  readonly?: boolean;
-  editControlType?: ControlType;
-  editControlOptions?: IControlOption[];
-  formatValue?: (value: string, item?: any) => string;
+  readonly?: boolean; //If the control is read only in edit mode
+  editControlType?: ControlType; //type of control to be rendered in edit mode
+  editControlOptions?: IControlOption[]; //options for the rendered cobmbo box
+  formatValue?: (value: string, item?: any) => string; //if the item need to be formatted before showing in the editable control
   onRenderEditControl?: (
     item: any,
     onChange: (column: IGridColumn, value: string, item: any) => void,
     column?: IGridColumn
-  ) => any;
-  onRenderBackup?: (item: any, index?: number, column?: IGridColumn) => any;
-  onValidate?: (value: any, column?: IGridColumn, item?: any) => string;
+  ) => any; //render custom editable control
+  onValidate?: (value: any, column?: IGridColumn, item?: any) => string; //Validates the data which entered in the control before saving
+
+  onRenderBackup?: (item: any, index?: number, column?: IGridColumn) => any; //Dont use this as this is dynamically populated at runtime
 }
 
 export interface IControlOption {
@@ -402,8 +408,7 @@ export interface IQuickActionSectionParams {
   showFilters: boolean;
   exportOptions?: IExportOptions[];
   selectedItems?: any[];
-  actionBarItems?: IActionBarItems;
-  quickActionSectionItems?: IQucickActionSectionItem[];
+  quickActionSectionItems?: IQuickActionSectionItem[];
   allowGroupSelection?: boolean;
   quickSearchOnEnter?: boolean;
   hideQuickSearchButton?: boolean;
@@ -422,22 +427,17 @@ export interface IQuickActionSectionParams {
   onSort?: (sortingOptions: ISortingOptions[]) => void;
 }
 
-export interface IQucickActionSectionItem {
+export interface IQuickActionSectionItem {
   key: string;
   type: GridViewActionBarItems;
-  alignment: QucickActionSectionAlignment;
+  alignment: QuickActionSectionAlignment;
   label?: string;
   icon?: string;
   className?: string;
   order?: number;
   options?: any;
   onClick?: () => void;
-  onRender?: (quickActionSectionItem?: IQucickActionSectionItem) => any; //override if it needs to be rendered in custom way
-}
-
-export interface IActionBarItems {
-  actionBarLeftItems?: GridViewActionBarItems[];
-  actionBarRightItems?: GridViewActionBarItems[];
+  onRender?: (quickActionSectionItem?: IQuickActionSectionItem) => any; //override if it needs to be rendered in custom way
 }
 
 export interface IExportOptions {

@@ -20,8 +20,8 @@ import {
   ISortingOptions,
   IPagingOptions,
   GridViewActionBarItems,
-  IQucickActionSectionItem,
-  QucickActionSectionAlignment,
+  IQuickActionSectionItem,
+  QuickActionSectionAlignment,
   ControlType,
   OperationType
 } from './GridView.models';
@@ -337,11 +337,11 @@ export const GridViewExample = () => {
   }
 
   const getQuickActionBarItems = () => {
-    let items: IQucickActionSectionItem[] = [
+    let items: IQuickActionSectionItem[] = [
       {
         key: '1',
         type: GridViewActionBarItems.Custom,
-        alignment: QucickActionSectionAlignment.Left,
+        alignment: QuickActionSectionAlignment.Left,
         onRender: () => {
           return <button type="button">test</button>;
         }
@@ -370,19 +370,16 @@ export const GridViewExample = () => {
           searchPlaceHolderText="Search By Date"
           itemUniqueField="id"
           statusMessages={statusMessages}
-          // QuickActionSection={getQuickActionSection()}
-          // actionBarItems={{
-          //   actionBarLeftItems: [GridViewActionBarItems.Custom],
-          //   actionBarRightItems: []
-          // }}
           quickActionSectionItems={getQuickActionBarItems()}
           highLightSearchText={true}
           // allowSelection={true}
           // allowGrouping={true}
           // allowGroupSelection={true}
-          allowAdd={true}
-          allowEdit={true}
-          allowDelete={true}
+          // allowAdd={true}
+          // allowEdit={true}
+          // allowDelete={true}
+          // actionColumnAlignment={AlignmentType.Left}
+          // hideActionColumnText={true}
           // isLoading={true}
           // allowMultiLevelSorting={true}
           // sortLevel={3}

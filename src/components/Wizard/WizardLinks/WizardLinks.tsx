@@ -77,7 +77,8 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
       const navLink: IWizardStepLink = {
         key: step.id.toString(),
         name: step.name,
-        icon: step.status ? iconMaps[step.status] : iconMaps[WizardStepStatus.NotStarted],
+        statusIcon: step.status ? iconMaps[step.status] : iconMaps[WizardStepStatus.NotStarted],
+        icon: step.iconName,
         disabled: step.disabled,
         status: step.status!,
         isCurrentItem: step.id.toString() === selectedLinkKey,
@@ -105,9 +106,9 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
     const wizardLinks = mapWizardStepData(steps);
     return (
       wizardLinks &&
-      wizardLinks.map((group) => (
+      wizardLinks.map((group, index) => (
         <Stack
-          key={group.name}
+          key={index}
           horizontal={wizardType === WizardType.Horizontal}
           className={classes.mainClass}
         >
@@ -137,6 +138,21 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
     }
   };
 
+  const getStatusIcon = (link: IWizardStepLink) => {
+    return (
+      <Icon
+        className={link.isCurrentItem ? 'active' : getClassName(link.status)}
+        iconName={
+          link.statusIcon
+            ? link.isCurrentItem
+              ? iconMaps[WizardStepStatus.Started]
+              : link.statusIcon
+            : iconMaps[WizardStepStatus.Blocked]
+        }
+      />
+    );
+  };
+
   const getWizardLink = (
     wizardType: WizardType,
     link: IWizardStepLink,
@@ -144,10 +160,12 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
     index: number
   ) => {
     return (
-      <>
+      <React.Fragment key={index}>
         <Stack
           aria-label={`${link.name}: ${WIZARD_STEP_STATUS_STRINGS[getLinkStatus(link)]}`}
-          title={`${link.name}: ${WIZARD_STEP_STATUS_STRINGS[getLinkStatus(link)]}`}
+          title={`${link.name}${
+            props.hideStepStatusText ? ': ' + WIZARD_STEP_STATUS_STRINGS[getLinkStatus(link)] : ''
+          }`}
           key={link.key}
           onClick={() => {
             !link.disabled && onStepClick(link);
@@ -169,16 +187,12 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
           }
         >
           <button type="button" disabled={link.disabled}>
-            <Icon
-              className={link.isCurrentItem ? 'active' : getClassName(link.status)}
-              iconName={
-                link.icon
-                  ? link.isCurrentItem
-                    ? iconMaps[WizardStepStatus.Started]
-                    : link.icon
-                  : iconMaps[WizardStepStatus.Blocked]
-              }
-            />
+            {!props.hideStepStatusConnector &&
+              (props.defaultStepLinksCollapse
+                ? !link.icon && getStatusIcon(link)
+                : getStatusIcon(link))}
+            {link.icon && <Icon iconName={link.icon} className={'active'} />}
+
             {!props.defaultStepLinksCollapse && (
               <span
                 className={
@@ -191,7 +205,8 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
               </span>
             )}
           </button>
-          {!props.defaultStepLinksCollapse &&
+          {!props.hideStepStatusConnector &&
+            !props.defaultStepLinksCollapse &&
             wizardType === WizardType.Vertical &&
             index !== links.length - 1 && (
               <>
@@ -214,7 +229,7 @@ export const WizardLinks: React.FC<IWizardProps> = (props) => {
             <Icon iconName="ChevronRight" />
           </Stack>
         )}
-      </>
+      </React.Fragment>
     );
   };
 
