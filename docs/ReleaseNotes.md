@@ -1,6 +1,6 @@
 # Release Notes
 
-#### 1.5.0
+#### 1.6.0
 
 - TextEditor - New Control is added to support basic text editing.
 - Gridview - Customization to show action column in the left or right.

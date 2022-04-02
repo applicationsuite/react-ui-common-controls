@@ -11,5 +11,6 @@ export * from './Logger';
 export * from './MicroFrontEnd';
 export * from './Pagination';
 export * from './PeoplePicker';
+export * from './TextEditor';
 export * from './ThemeProvider';
 export * from './Wizard';
