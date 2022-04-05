@@ -1,5 +1,8 @@
 # Release Notes
 
+#### 1.6.1
+- Gridview - Performance improvement for gridview columns rendering
+
 #### 1.6.0
 
 - TextEditor - New Control is added to support basic text editing.
