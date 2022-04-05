@@ -990,10 +990,10 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     return columns;
   };
 
+  const columns = React.useMemo(() => getUpdatedColumns(state.columns || []), [state.columns]);
+
   const getGridViewData = () => {
     const items = getItems();
-    const columns = getUpdatedColumns(state.columns!);
-
     const gridViewDataClass = props.gridDataClass
       ? mergeClassNames([classes.gridViewData, props.gridDataClass])
       : classes.gridViewData;

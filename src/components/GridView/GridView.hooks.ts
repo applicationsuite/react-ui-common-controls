@@ -800,10 +800,6 @@ export const updateColumns = (
       column.onRenderBackup = column.onRender;
     }
   });
-
-  if (isActionColumnRequired) {
-  }
-
   return newColumns;
 };
 
