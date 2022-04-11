@@ -198,7 +198,7 @@ export const GridViewExample = () => {
       data: 'number',
       selected: true,
       onRender: (item: IDocument) => (
-        <span>{item.isValid.toString() === 'true' ? 'Yes' : 'No'}</span>
+        <span>{item.isValid && item.isValid.toString() === 'true' ? 'Yes' : 'No'}</span>
       ),
       filterType: FilterType.ToggleFilter,
       filterItems: [
@@ -246,7 +246,7 @@ export const GridViewExample = () => {
 
   function getDocuments() {
     const documents: IDocument[] = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
       documents.push({

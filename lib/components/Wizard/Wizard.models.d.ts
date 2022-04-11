@@ -1,3 +1,11 @@
+export declare const MAX_HORIZONTAL_STEPS = 20;
+export declare const ORDER_COLUMN = "order";
+export declare const WIZARD_LOCALIZATION_CONSTANTS: {
+    STEPS: {
+        id: string;
+        defaultMessage: string;
+    };
+};
 export declare enum WizardStepStatus {
     NotStarted = 0,
     Started = 1,
@@ -7,18 +15,6 @@ export declare enum WizardStepStatus {
     InProgress = 5,
     Disabled = 6
 }
-export declare enum WizardType {
-    Vertical = 0,
-    Horizontal = 1
-}
-export declare const MAX_HORIZONTAL_STEPS = 20;
-export declare const ORDER_COLUMN = "order";
-export declare const WIZARD_LOCALIZATION_CONSTANTS: {
-    STEPS: {
-        id: string;
-        defaultMessage: string;
-    };
-};
 export declare const WIZARD_STEP_STATUS_STRINGS: {
     0: string;
     1: string;
@@ -28,6 +24,10 @@ export declare const WIZARD_STEP_STATUS_STRINGS: {
     5: string;
     6: string;
 };
+export declare enum WizardType {
+    Vertical = 0,
+    Horizontal = 1
+}
 export interface IWizardData {
     type: WizardType;
     steps: IWizardStep[];
@@ -68,6 +68,7 @@ export interface IWizardProps {
     wizardAriaLabel?: string;
     onWizardChange?: (steps: IWizardStep[], currentStep?: IWizardStep, lastStep?: IWizardStep) => void;
     defaultStepLinksCollapse?: boolean;
+    className?: string;
     stepClass?: string;
     stepActiveClass?: string;
     wizardLinksClass?: string;

@@ -78,16 +78,17 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
   };
 
   const getVerticalWizard = () => {
-    let wizardLinksClass = mergeClassNames([
+    const className = mergeClassNames([classes.wizardVertical, props.className]);
+    const wizardLinksClass = mergeClassNames([
       isCollpased ? classes.wizardLinksCollapsed : classes.wizardLinks,
       props.wizardLinksClass
     ]);
-    let wizardContainerClass = mergeClassNames([
+    const wizardContainerClass = mergeClassNames([
       classes.wizardContainer,
       props.wizardContainerClass
     ]);
     return (
-      <Stack horizontal tokens={stackTokens} className={classes.wizardVertical}>
+      <Stack horizontal tokens={stackTokens} className={className}>
         <Stack.Item align="stretch" grow className={wizardLinksClass}>
           {getWizardLinks()}
           <div
@@ -117,12 +118,20 @@ export const Wizard: React.FC<IWizardProps> = (props) => {
     );
   };
 
-  const getHorizontalWizard = () => (
-    <Stack>
-      <Stack.Item align="center">{getWizardLinks()}</Stack.Item>
-      <Stack.Item align="auto">{getStepComponent()}</Stack.Item>
-    </Stack>
-  );
+  const getHorizontalWizard = () => {
+    const { className, wizardLinksClass, wizardContainerClass } = props;
+    return (
+      <Stack className={className}>
+        <Stack.Item align="center" className={wizardLinksClass}>
+          {getWizardLinks()}
+        </Stack.Item>
+        <Stack.Item align="auto" className={wizardContainerClass}>
+          {getStepComponent()}
+        </Stack.Item>
+      </Stack>
+    );
+  };
+
   if (!state.steps) {
     return null;
   }

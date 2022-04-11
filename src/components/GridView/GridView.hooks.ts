@@ -25,6 +25,7 @@ import {
   mergeItems,
   getGridViewGroupsByColumns
 } from './GridViewUtils';
+import { cloneDeep } from 'lodash';
 
 export const useInit = (props: IGridViewParams, callbacks: IGridViewCallbacks) => {
   const [state, dispatch] = useReducer(gridViewReducer, {});
@@ -460,7 +461,7 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
       });
     },
     addRecord: () => {
-      let items = state.filteredItems;
+      let items = getItems(state);
       let newItem: any = {
         [state.itemUniqueField!]: new Date().getUTCMilliseconds().toString(),
         isDirty: true,
@@ -471,16 +472,12 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
       items = items || [];
       items.push(newItem);
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        type: getActionTypeForItems(state),
         data: items
-      });
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_DATA,
-        data: { isUpdateMode: true }
       });
     },
     editRecords: (itemsToEdit: any[]) => {
-      let items = state.filteredItems || [];
+      let items = cloneDeep(getItems(state));
       itemsToEdit.forEach((item) => {
         let index = items.findIndex(
           (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
@@ -491,28 +488,12 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         }
       });
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        type: getActionTypeForItems(state),
         data: items
       });
-    },
-    deleteRecords: (itemsToDelete: any[]) => {
-      let items = state.filteredItems || [];
-      items = items.filter(
-        (item) =>
-          !itemsToDelete.some((i) => i[state.itemUniqueField!] === item[state.itemUniqueField!])
-      );
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
-        data: items
-      });
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_DATA,
-        data: { isUpdateMode: true }
-      });
-      return true;
     },
     changeRecords: (itemsToUpdate: any[]) => {
-      let items = state.filteredItems || [];
+      let items = getItems(state);
       itemsToUpdate.forEach((item) => {
         let index = items.findIndex(
           (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
@@ -522,31 +503,13 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         }
       });
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        type: getActionTypeForItems(state),
         data: items
       });
     },
-    saveRecords: (itemsToAdd: any[]) => {
-      let items = state.filteredItems || [];
-      itemsToAdd.forEach((item) => {
-        let index = items.findIndex(
-          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
-        );
-        if (index >= 0) {
-          items[index] = { ...item.updatedData };
-          items[index].isDirty = false;
-          items[index].isNewItem = false;
-        }
-      });
-      dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
-        data: items
-      });
-      return true;
-    },
-    cancelRecords: (itemsToCancel: any[]) => {
-      let items = state.filteredItems || [];
 
+    cancelRecords: (itemsToCancel: any[]) => {
+      let items = getItems(state);
       itemsToCancel.forEach((item) => {
         let index = items.findIndex(
           (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
@@ -560,12 +523,105 @@ const gridViewActions = (dispatch: any, state: IGridViewData) => {
         }
       });
       dispatch({
-        type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+        type: getActionTypeForItems(state),
         data: items
       });
+    },
+    saveRecords: (itemsToSave: any[]) => {
+      let items = state.items;
+      itemsToSave.forEach((item) => {
+        let index = items.findIndex(
+          (i) => i[state.itemUniqueField!] === item[state.itemUniqueField!]
+        );
+        if (item.isNewItem && index < 0) {
+          let updatedTtem = { ...item.updatedData };
+          updatedTtem.isDirty = false;
+          updatedTtem.isNewItem = false;
+          items.push(updatedTtem);
+        } else if (index >= 0) {
+          items[index] = { ...item.updatedData };
+          items[index].isDirty = false;
+          items[index].isNewItem = false;
+        }
+      });
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_ITEMS,
+        data: items
+      });
+      updateItems(items, state, dispatch);
+      return true;
+    },
+
+    deleteRecords: (itemsToDelete: any[]) => {
+      let items = state.items;
+      items = items.filter(
+        (item) =>
+          !itemsToDelete.some((i) => i[state.itemUniqueField!] === item[state.itemUniqueField!])
+      );
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_ITEMS,
+        data: items
+      });
+      updateItems(items, state, dispatch);
+      return true;
     }
   };
   return actions;
+};
+
+const updateItems = (items: any[], state: IGridViewData, dispatch: any) => {
+  if (state.gridViewType === GridViewType.InMemory) {
+    let filteredItems = [...items];
+
+    // Applying Filter Text
+    filteredItems = applySearchText(
+      state.searchText!,
+      filteredItems,
+      state.searchFields!,
+      state.itemUniqueField
+    );
+
+    filteredItems = applyFilters(state.selectedFilters!, filteredItems);
+
+    // Applying sort
+    const sortingOptions =
+      state.sortingOptions! && state.sortingOptions.length ? state.sortingOptions[0] : undefined;
+    filteredItems = applySorting(filteredItems, sortingOptions!);
+
+    // Create Groups
+    if (state.allowGrouping) {
+      const groupedData = getGridViewGroupsByColumns(
+        state.columns!,
+        filteredItems!,
+        state.groupColumn,
+        state.allowGroupSelection
+      );
+      filteredItems = groupedData.items;
+      dispatch({
+        type: GRIDVIEW_ACTIONS.SET_GROUPS,
+        data: groupedData.groups
+      });
+    }
+    dispatch({
+      type: GRIDVIEW_ACTIONS.SET_FILTER_ITEMS,
+      data: filteredItems
+    });
+
+    // Apply Paging
+    const pagingOptions = state.pagingOptions ?? getPagingOptions();
+    const paginatedFilteredItems = applyPaging(pagingOptions.pageSize, 1, filteredItems);
+    dispatch({
+      type: GRIDVIEW_ACTIONS.SET_PAGINATED_FILTERED_ITEMS,
+      data: paginatedFilteredItems
+    });
+  }
+  const pagingOptions = state.pagingOptions ?? getPagingOptions();
+  pagingOptions.pageNumber = 1;
+
+  dispatch({
+    type: GRIDVIEW_ACTIONS.SET_PAGING_OPTIONS,
+    data: pagingOptions
+  });
 };
 
 const applyFilters = (filters: IGridFilter[], items: any[]) => {
@@ -870,4 +926,27 @@ export const getFilteredSelectedItems = (
       selected && filteredSelectedItems.push(selected);
     });
   return filteredSelectedItems;
+};
+
+const getActionTypeForItems = (state: IGridViewData) => {
+  const action =
+    state.hidePaging || state.allowGrouping
+      ? GRIDVIEW_ACTIONS.SET_FILTER_ITEMS
+      : state.gridViewType === GridViewType.InMemory
+      ? GRIDVIEW_ACTIONS.SET_PAGINATED_FILTERED_ITEMS
+      : GRIDVIEW_ACTIONS.SET_ITEMS;
+  return action;
+};
+
+export const getItems = (state: IGridViewData) => {
+  if (!state) {
+    return [];
+  }
+  const items =
+    state.hidePaging || state.allowGrouping
+      ? state.filteredItems
+      : state.gridViewType === GridViewType.InMemory
+      ? state.paginatedFilteredItems
+      : state.items;
+  return items || [];
 };

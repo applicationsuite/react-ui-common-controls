@@ -35,7 +35,7 @@ import {
 } from './GridView.models';
 import { GridViewShimmer } from './GridViewShimmer';
 import { GridViewDefault } from './GridViewDefault';
-import { useInit, getFilteredSelectedItems, getUpdateFilters } from './GridView.hooks';
+import { useInit, getFilteredSelectedItems, getUpdateFilters, getItems } from './GridView.hooks';
 import { IGridViewActions } from './GridView.actions';
 import { Pagination, PaginationWithoutPages, PageType } from '../Pagination';
 import { QuickActionSection as QuickActionSectionDefault } from './QuickActionSection';
@@ -142,16 +142,6 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           selection && selection.setIndexSelected(index, true, false);
         }
       });
-  };
-
-  const getItems = () => {
-    const items =
-      props.allowAdd || props.hidePaging || props.allowGrouping
-        ? state.filteredItems
-        : props.gridViewType === GridViewType.InMemory
-        ? state.paginatedFilteredItems
-        : state.items;
-    return items;
   };
 
   const getSelections = (changeType?: GridViewChangeType, value?: any) => {
@@ -516,7 +506,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
                 !value &&
                 localizedString(COMMON_LOCALIZATION_STRINGS.REQUIRED_FIELD, localization);
             }
-            errors = errors + item.updatedData[`${column.fieldName!}Error`] ? 1 : 0;
+            errors = errors + (item.updatedData[`${column.fieldName!}Error`] ? 1 : 0);
           });
       });
     if (errors > 0) {
@@ -785,6 +775,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           <CommandBarButton
             className={classes.gridviewActionColumnButton}
             iconProps={{ iconName: 'Save' }}
+            ariaLabel={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
             title={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
             //text={localizedString(COMMON_LOCALIZATION_STRINGS.SAVE, localization)}
             onClick={() => {
@@ -794,6 +785,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
           <CommandBarButton
             className={classes.gridviewActionColumnButton}
             iconProps={{ iconName: 'Cancel' }}
+            ariaLabel={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
             title={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
             //text={localizedString(COMMON_LOCALIZATION_STRINGS.CANCEL, localization)}
             onClick={() => {
@@ -890,6 +882,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         <CommandBarButton
           className={classes.gridviewActionColumnButton}
           iconProps={{ iconName: 'Edit' }}
+          ariaLabel={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
           title={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
           //text={localizedString(COMMON_LOCALIZATION_STRINGS.EDIT, localization)}
           onClick={() => {
@@ -908,6 +901,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
         <CommandBarButton
           className={classes.gridviewActionColumnButton}
           iconProps={{ iconName: 'Delete' }}
+          ariaLabel={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
           title={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
           //text={localizedString(COMMON_LOCALIZATION_STRINGS.DELETE, localization)}
           onClick={() => {
@@ -962,7 +956,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
       }
     }
     const itemsToUpdate = getItemsToEdit();
-    if (!(itemsToUpdate.length || props.highLightSearchText)) {
+    if (!(itemsToUpdate.length || (!props.hideQuickSearch && props.highLightSearchText))) {
       return columns;
     }
 
@@ -993,7 +987,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   const columns = React.useMemo(() => getUpdatedColumns(state.columns || []), [state.columns]);
 
   const getGridViewData = () => {
-    const items = getItems();
+    const items = getItems(stateRef.current!);
     const gridViewDataClass = props.gridDataClass
       ? mergeClassNames([classes.gridViewData, props.gridDataClass])
       : classes.gridViewData;
@@ -1014,7 +1008,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
     if (CardComponent) {
       return (
         <div className={items!.length ? gridViewDataClass : classes.gridViewNoData}>
-          {props.items.map((item, index) => {
+          {items.map((item: any, index: number) => {
             const cardProps = { ...props, item };
             return <CardComponent key={index} {...cardProps} />;
           })}
@@ -1120,11 +1114,7 @@ export const GridView: React.FC<IGridViewParams> = (props: IGridViewParams) => {
   };
 
   const getPager = () => {
-    if (
-      props.hidePaging ||
-      props.allowAdd ||
-      (props.gridViewType === GridViewType.InMemory && props.allowGrouping)
-    )
+    if (props.hidePaging || (props.gridViewType === GridViewType.InMemory && props.allowGrouping))
       return null;
     const totalCount =
       state.gridViewType === GridViewType.InMemory

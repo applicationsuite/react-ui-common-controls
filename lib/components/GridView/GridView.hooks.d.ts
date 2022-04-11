@@ -10,3 +10,4 @@ export declare const useSelection: (props: IGridViewParams, handleSelectionChang
 export declare const getUpdateFilters: (gridFilters: IGridFilter[], selectedFilters: IGridFilter[], items: any[], oldItems?: any[] | undefined, isInMemory?: boolean) => IGridFilter[];
 export declare const updateColumns: (newColumns: IGridColumn[], existingColumns: IGridColumn[], sortingOptions: ISortingOptions, onColumnSort: any, removeSorting?: boolean | undefined, isActionColumnRequired?: boolean | undefined) => IGridColumn[];
 export declare const getFilteredSelectedItems: (items: any[], selectedItems: any[], itemUniqueField: string) => any[];
+export declare const getItems: (state: IGridViewData) => any[];

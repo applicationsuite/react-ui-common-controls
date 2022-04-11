@@ -158,7 +158,7 @@ export const getFieldFilterItems = (
       !filterItems.find(
         (filterItem) =>
           filterItem.value === item[field] &&
-          (item[field] !== undefined || item[field] !== null || item[field] !== '')
+          !(item[field] === undefined || item[field] === null || item[field] === '')
       )
     ) {
       const filterItem: IGridFilterItem = {
@@ -353,7 +353,7 @@ const getGroupByField = (groupItem: IGroupItem, column: IGridColumn, count: numb
 };
 
 export const getGroupData = (groupFieldName: string, items: any[] = []) => {
-  const groupValues = Array.from(new Set(items.map((item) => item[groupFieldName])));
+  const groupValues = [...new Set(items.map((item) => item[groupFieldName]))];
   const groups: IGroupItem[] = [];
   groupValues.forEach((grp) => {
     const grpItems = items.filter((item) => item[groupFieldName] === grp);
