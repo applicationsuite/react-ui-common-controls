@@ -1,7 +1,6 @@
 node_modules
-v1
 src
-playground
+test-app
 build
 .storybook
 .vscode

@@ -1,10 +1,16 @@
 # Release Notes
 
+#### 3.0.0
+
+- Fluent 2 upgrade
+
 #### 2.0.0
+
 - Gridview - Edit/Delete/Add Feature bug fix and enhancement
 - Wizard - class names are added to support style customization
 
 #### 1.6.1
+
 - Gridview - Performance improvement for gridview columns rendering
 
 #### 1.6.0

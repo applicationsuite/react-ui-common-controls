@@ -1,7 +1,0 @@
-{
-  "msalConfig": {
-    "clientId": "8b5bf996-ed3f-48c4-b4db-e2523967e729",
-    "authority": "https://login.microsoftonline.com/common/",
-    "scopes": ["openid email profile"]
-  }
-}
