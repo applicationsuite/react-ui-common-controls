@@ -30,6 +30,42 @@
     "eslint-plugin-react": "^7.34.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/applicationsuite/react-ui-common-controls.git"
+  },
+  "keywords": [
+    "react-ui-common-controls",
+    "react-common-ui-controls",
+    "react-ui-controls",
+    "react-controls",
+    "react-common-controls",
+    "react-fluent-ui-controls",
+    "fluentui",
+    "fluent-ui",
+    "fluent-ui-controls",
+    "fluent-ui-common-controls",
+    "react-fluent-ui-controls",
+    "Accordion",
+    "AppWrapper",
+    "AzureAD",
+    "ErrorBoundary",
+    "FileUpload",
+    "GridView",
+    "HighlightText",
+    "LanguageProvider",
+    "Logger",
+    "MicroFrontEnd",
+    "Pagination",
+    "ThemeProvider",
+    "Wizard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/applicationsuite/react-ui-common-controls/issues"
+  },
+  "homepage": "https://github.com/applicationsuite/react-ui-common-controls#readme"
 }
 
